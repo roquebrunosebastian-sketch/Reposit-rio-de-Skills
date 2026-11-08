@@ -4,6 +4,7 @@
 //   ativo    — true: o agente está no escritório; false: o posto mostra a placa "EM BREVE"
 //   projeto  — link do Projeto no claude.ai (ex.: "https://claude.ai/project/..."); vira o botão "Abrir"
 //   cor      — cor do agente (camisa, cadeira, crachá); precisa bater com arte/escritorio.px.js
+//   conversa — opcional: liga o chat dentro do escritório (instruções + contexto do agente)
 // O `id` liga o agente ao posto dele (src/layout.js) e à arte (agente_<id>, icone_<id>...).
 export const AGENTES = [
   {
@@ -13,6 +14,14 @@ export const AGENTES = [
     cor: "#58ad4f",
     ativo: true,
     projeto: "",
+    // Conversa dentro do escritório (só na versão publicada no claude.ai). Os arquivos ficam em
+    // instrucoes/ e não vão para o GitHub — veja instrucoes/LEIAME.md.
+    conversa: {
+      titulo: "Gerente Sênior de Contas",
+      instrucoes: "instrucoes/financas/instrucoes.md",
+      contexto: "instrucoes/financas/contexto.md",
+      saudacao: "Olá! Sou seu gerente de contas. Para montar seu diagnóstico e a projeção das próximas faturas, me envie: sua renda líquida mensal, as faturas dos últimos 3 a 12 meses (CSV, OFX ou um print de cada página), os parcelamentos ativos, o limite do cartão e as datas de fechamento e vencimento. Deixe visíveis só os 4 últimos dígitos do cartão.",
+    },
   },
   {
     id: "investimentos",

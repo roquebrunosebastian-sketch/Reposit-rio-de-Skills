@@ -33,6 +33,7 @@ A página usa ES modules e carrega texturas, por isso precisa de um servidor HTT
 | `camera=rpg` \| `isometrica` \| `topo` | câmera inicial (padrão `rpg`) |
 | `pixel=1..4` | tamanho do pixel na tela (padrão `2`) |
 | `ui=0` | esconde a interface (para usar em `<iframe>`) |
+| `conversa=financas` | abre direto a conversa com o agente |
 
 Arraste para girar, use a roda do mouse (ou pinça) para aproximar e clique num agente para
 destacá-lo no painel. Quando a câmera gira para fora de uma parede lateral, essa parede é recortada
@@ -94,6 +95,46 @@ encosta na parede do fundo e a linha 10 é a entrada. `s` marca o lugar de cada 
 10 p......DD......p     D capacho da entrada
 ```
 
+## Conversar com os agentes
+
+![Conversa com o agente de Finanças: a resposta tem tabela e alerta, e o agente mostra "!" na mesa](docs/conversa.png)
+
+*Exemplo com números fictícios (os do próprio contexto do agente).*
+
+Agentes com o campo `conversa` em `src/agentes-config.js` (por enquanto, Finanças) conversam
+dentro do escritório: clique no agente ou em **Conversar** no painel. A caixa de diálogo abre à
+esquerda e a câmera se aproxima da mesa dele.
+
+- **O agente reage à conversa.** Enquanto responde, ele digita com o balão "…". No fim, mostra
+  "!" quando há um alerta (fatura acima de 30% da renda, rotativo…), "?" quando precisa de dados
+  seus e ✓ quando concluiu. O resumo dele aparece no painel.
+- **Anexos:** extratos e faturas em CSV, OFX ou TXT (lidos como texto) e prints em PNG, JPG ou
+  WebP. PDF ainda não é lido: exporte em CSV/OFX ou mande um print de cada página.
+- **Histórico privado:** cada mensagem fica salva na sua área privada do banco do artifact
+  (`data/users/<seu id>/<agente>/mensagens`), que nem o dono do artifact enxerga. "Nova conversa"
+  apaga o histórico daquele agente.
+- **Onde funciona:** só na versão publicada no claude.ai, que usa a sua conta para falar com o
+  Claude (o primeiro envio pede permissão). Na versão local (`npm run servir`) o chat mostra um
+  aviso e o botão do projeto.
+
+### Como o agente é montado
+
+Cada chamada ao Claude é independente, então a página envia sempre, nesta ordem:
+
+1. as regras do escritório (`src/conversa.js`): sem arquivos nem HTML, dashboards em tabelas
+   Markdown, e a última linha `[[status: alerta|pensando|concluido | resumo]]`;
+2. as instruções do Projeto (`instrucoes/<agente>/instrucoes.md`);
+3. o contexto / base de conhecimento (`instrucoes/<agente>/contexto.md`);
+4. o histórico da conversa, das mensagens mais recentes para trás, até caber no limite de 256 KiB.
+
+Os arquivos de `instrucoes/` **não vão para o GitHub** (estão no `.gitignore`), porque o repositório
+é público e instruções de finanças, terapia e saúde costumam ter dados pessoais. Eles ficam na sua
+máquina e na versão publicada (privada). Veja [`instrucoes/LEIAME.md`](instrucoes/LEIAME.md).
+
+Para ligar outro agente: crie `instrucoes/<id>/instrucoes.md` (e, se tiver, `contexto.md`) e
+acrescente `conversa: { titulo, instrucoes, contexto, saudacao }` na entrada dele em
+`src/agentes-config.js`.
+
 ## API
 
 A página expõe `window.escritorio`. Os agentes são identificados pelo `id`
@@ -116,6 +157,7 @@ escritorio.agentes();                               // quem está presente, stat
 | `simular(ligar)` | liga/desliga a troca automática de status (demonstração). |
 | `previaFuturos(ligar)` | traz/leva os agentes "em breve". |
 | `camera(nome)` | `rpg`, `isometrica` ou `topo`. |
+| `conversar(id)` | abre a conversa com o agente (só agentes com `conversa`). |
 
 | Status | Balão | No posto | Monitor (mesas) |
 | --- | --- | --- | --- |
@@ -143,10 +185,12 @@ escritorio-3d/
 ├── arte/escritorio.px.js     toda a pixel art, na DSL da skill pxl
 ├── assets/                   PNGs gerados + manifest.json (npm run arte)
 ├── ferramentas/pxl-lite.mjs  renderizador da DSL (veja abaixo)
-├── src/agentes-config.js     seus agentes: nome, papel, cor, ativo, link do projeto
+├── instrucoes/               instruções e contexto de cada agente (fora do Git)
+├── src/agentes-config.js     seus agentes: nome, papel, cor, ativo, link do projeto, conversa
 ├── src/layout.js             mapa de tiles, postos e caminho (BFS em 4 direções)
 ├── src/cena.js               sala, paredes recortáveis e a mobília de cada posto
 ├── src/agentes.js            agentes: chegar, andar, pose no posto, status, sair
+├── src/conversa.js           chat com os agentes: Claude, anexos, histórico privado, status
 ├── src/recursos.js           texturas sem suavização + billboards de pixel art
 ├── src/main.js               renderizador pixelado, câmeras, painel e API
 └── index.html

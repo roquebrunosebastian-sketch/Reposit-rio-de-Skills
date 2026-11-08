@@ -8,6 +8,7 @@ import { construirEscritorio } from "./cena.js";
 import { Agentes, STATUS, cimaDaCamera } from "./agentes.js";
 import { LARGURA } from "./layout.js";
 import { AGENTES } from "./agentes-config.js";
+import { Conversas } from "./conversa.js";
 
 const params = new URLSearchParams(location.search);
 const $ = (s) => document.querySelector(s);
@@ -67,9 +68,10 @@ function aplicarDeslocamento(d) {
 function areaLivre() {
   const W = innerWidth, H = innerHeight, area = { l: 0, t: 0, r: W, b: H };
   if (document.body.classList.contains("sem-ui")) return area;
-  for (const el of document.querySelectorAll(".titulo, .painel, .barra")) {
+  for (const el of document.querySelectorAll(".titulo, .painel, .barra, .conversa")) {
     const r = el.getBoundingClientRect();
     if (!r.width) continue;
+    if (el.matches(".conversa")) { if (r.width < W * 0.7) area.l = Math.max(area.l, r.right); continue; }
     if (el.matches(".painel") && r.left > W / 2) area.r = Math.min(area.r, r.left);
     else if (r.top > H / 2) area.b = Math.min(area.b, r.top);
     else if (r.width > W * 0.6) area.t = Math.max(area.t, r.bottom);
@@ -109,6 +111,21 @@ function calcularEnquadramento(nome) {
   camera.quaternion.copy(salvo.quat);
   aplicarDeslocamento(salvo.desloc);
   return resultado;
+}
+
+// Aproxima a câmera de um posto (ao conversar com o agente), centralizado na área livre da tela
+function focarPosto(id) {
+  const posto = escritorio.postos.get(id);
+  if (!posto) return;
+  const p = CAMERAS[cameraAtual] || CAMERAS.rpg;
+  const el = THREE.MathUtils.degToRad(p.elev), az = THREE.MathUtils.degToRad(p.azim);
+  const dir = new THREE.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el));
+  const alvo = new THREE.Vector3(posto.pos.x, 0.6, posto.pos.z);
+  const area = areaLivre();
+  const desloc = { x: (area.l + area.r) / 2 - innerWidth / 2, y: (area.t + area.b) / 2 - innerHeight / 2 };
+  const dist = THREE.MathUtils.clamp(8000 / Math.max(320, Math.min(area.r - area.l, area.b - area.t)), 11, 17);
+  transicao = { de: camera.position.clone(), deAlvo: controles.target.clone(), deDesloc: { ...deslocamento },
+    para: alvo.clone().addScaledVector(dir, dist), paraAlvo: alvo, paraDesloc: desloc, t: 0 };
 }
 
 function irParaCamera(nome, instantaneo = false) {
@@ -160,7 +177,14 @@ function linhaAgente(cfg) {
   const linkProjeto = /^https:\/\//.test(cfg.projeto || "")
     ? `<a class="botao" href="${escapar(cfg.projeto)}" target="_blank" rel="noopener" aria-label="Abrir o projeto de ${escapar(cfg.nome)} no Claude">Abrir</a>` : "";
   let situacao, controles;
-  if (presente) {
+  const conversa = conversas?.tem(cfg.id);
+  if (conversa) {
+    // o status vem da própria conversa; o painel mostra o último resumo do agente
+    situacao = (presente && ROTULO_ESTADO[presente.estado]) || conversas.resumo(cfg.id) || (presente ? "presente" : "fora");
+    li.title = `${cfg.papel}${conversas.resumo(cfg.id) ? `\nÚltimo resumo: ${conversas.resumo(cfg.id)}` : ""}`;
+    controles = `<button type="button" data-acao="conversar">Conversar</button>${linkProjeto}${presente
+      ? `<button type="button" data-acao="sair" class="icone" aria-label="${escapar(cfg.nome)} sai do escritório" title="Sair do escritório">✕</button>` : ""}`;
+  } else if (presente) {
     const opcoes = Object.keys(STATUS).map((s) => `<option value="${s}" ${presente.status === s ? "selected" : ""}>${STATUS[s].rotulo}</option>`).join("");
     situacao = ROTULO_ESTADO[presente.estado] || (cfg.ativo ? "presente" : "prévia");
     controles = `<select aria-label="Status de ${escapar(cfg.nome)}" data-acao="status">${opcoes}</select>
@@ -199,6 +223,7 @@ for (const lista of [listaAtivos, listaFuturos]) {
     if (!botao) return;
     const id = botao.closest("li").dataset.id;
     if (botao.dataset.acao === "chegar") API.chegar(id).catch(aviso);
+    if (botao.dataset.acao === "conversar") API.conversar(id);
     if (botao.dataset.acao === "sair") API.sair(id);
   });
   lista.addEventListener("change", (ev) => {
@@ -233,6 +258,7 @@ canvas.addEventListener("pointerup", (ev) => {
   let o = hit?.object;
   while (o && o.userData.postoId == null) o = o.parent;
   if (!o) return;
+  if (conversas.tem(o.userData.postoId)) { API.conversar(o.userData.postoId); return; }
   const li = document.querySelector(`.lista-agentes li[data-id="${o.userData.postoId}"]`);
   li?.classList.remove("piscar");
   void li?.offsetWidth;
@@ -287,13 +313,20 @@ const API = {
   definirStatus: (id, status) => agentes.definirStatus(idDe(id), status),
   status: Object.keys(STATUS),
   camera: (nome) => irParaCamera(nome),
+  /** Abre a conversa com o agente (para os que têm `conversa` em agentes-config.js). */
+  conversar(id) {
+    const agenteId = idDe(id);
+    if (!conversas.tem(agenteId)) throw new Error(`${agenteId} ainda não tem conversa configurada`);
+    return conversas.abrir(agenteId);
+  },
   /** Liga/desliga a troca automática de status dos agentes presentes (demonstração). */
   simular(ligar = true) {
     clearInterval(simulacao);
     simulacao = null;
     if (ligar) {
       const trocar = () => {
-        const presentes = agentes.listar().filter((a) => a.estado === "no_posto");
+        // quem tem conversa de verdade mostra o status que veio dela; a simulação não mexe
+        const presentes = agentes.listar().filter((a) => a.estado === "no_posto" && !conversas.tem(a.posto));
         if (!presentes.length) return;
         const a = presentes[Math.floor(Math.random() * presentes.length)];
         const opcoes = ["trabalhando", "trabalhando", "pensando", "alerta", "concluido", "ocioso"].filter((s) => s !== a.status);
@@ -327,7 +360,7 @@ Object.assign(API, {
 });
 
 // Integração por iframe: parent.postMessage({ escritorio: "definirStatus", args: ["financas", "alerta"], id: 7 }, "*")
-const PERMITIDOS = ["agentes", "chegar", "sair", "definirStatus", "simular", "previaFuturos", "camera",
+const PERMITIDOS = ["agentes", "chegar", "sair", "definirStatus", "simular", "previaFuturos", "camera", "conversar",
   "mesas", "alocarAgente", "liberarMesa", "demonstracao", "esvaziar"];
 addEventListener("message", (ev) => {
   const d = ev.data;
@@ -338,11 +371,21 @@ addEventListener("message", (ev) => {
 });
 
 // ---------------------------------------------------------------------------------------------
-let escritorio, agentes;
+let escritorio, agentes, conversas;
 try {
   const R = await carregarRecursos(new URL("../assets/", import.meta.url).href);
   escritorio = construirEscritorio(cena, R);
   agentes = new Agentes(cena, R, escritorio, { camera, camadaRotulos: $("#rotulos"), aoMudar: desenharPainel });
+  conversas = new Conversas({
+    api: {
+      presente: (id) => !!agentes.obter(id),
+      chegar: (id) => { agentes.alocar(id).catch(() => {}); },
+      definirStatus: (id, status) => { if (agentes.obter(id)) agentes.definirStatus(id, status); },
+    },
+    aoMudar: desenharPainel,
+    // ao abrir a conversa a câmera se aproxima do agente; ao fechar, volta a mostrar a sala
+    aoAbrirFechar: (aberta, id) => requestAnimationFrame(() => (aberta && innerWidth > 760 ? focarPosto(id) : irParaCamera(cameraAtual))),
+  });
   window.escritorio = API;
   // os agentes ativos já começam no escritório (use ?vazio=1 para começar sem ninguém)
   if (params.get("vazio") !== "1")
@@ -355,6 +398,7 @@ try {
   document.body.classList.add("pronto");
   if (params.get("demo") === "1") API.simular(true);
   if (params.get("previa") === "1") API.previaFuturos(true);
+  if (params.get("conversa")) API.conversar(params.get("conversa"));
 } catch (e) {
   $("#carregando").textContent = "Não foi possível carregar o escritório: " + e.message;
   throw e;

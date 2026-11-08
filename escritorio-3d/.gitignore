@@ -1,3 +1,8 @@
 # prévias ampliadas geradas pelo pxl (recriadas a cada "npm run arte")
 assets/_preview/
 node_modules/
+
+# Instruções e contexto dos agentes: ficam fora do repositório (que é público), porque
+# costumam ter dados pessoais. Veja instrucoes/LEIAME.md.
+instrucoes/*
+!instrucoes/LEIAME.md

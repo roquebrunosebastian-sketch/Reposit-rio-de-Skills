@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Markdown das respostas dos agentes (sanitizado) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
   <script type="importmap">
     {
       "imports": {
@@ -20,6 +23,7 @@
     :root {
       --tinta: #262236;
       --borda: #262236;
+      --borda-suave: #d2cdc2;
       --papel: #fcfbf6;
       --papel-2: #ebe8df;
       --filete: #7fd4c4;
@@ -33,6 +37,7 @@
       :root:not([data-theme="light"]) {
         --tinta: #f4f1ea;
         --borda: #0e0c17;
+        --borda-suave: #4c4866;
         --papel: #2b2840;
         --papel-2: #36334d;
         --filete: #46a89d;
@@ -43,6 +48,7 @@
     :root[data-theme="dark"] {
       --tinta: #f4f1ea;
       --borda: #0e0c17;
+      --borda-suave: #4c4866;
       --papel: #2b2840;
       --papel-2: #36334d;
       --filete: #46a89d;
@@ -91,16 +97,17 @@
     .acoes { display: flex; gap: 6px; align-items: center; justify-content: flex-end; }
     .info { display: grid; min-width: 0; }
     .info b { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .info small { color: var(--suave); font-size: 13px; }
+    .info small { color: var(--suave); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    button, select, a.botao {
+    button, select, a.botao, label.botao {
       font: inherit; font-size: 14px; color: #262236; background: #fcfbf6;
       border: 2px solid #262236; border-radius: 6px; padding: 4px 9px; cursor: pointer;
       box-shadow: 0 2px 0 #262236; min-height: 30px;
     }
-    a.botao { text-decoration: none; display: inline-flex; align-items: center; }
-    button:hover, select:hover, a.botao:hover { background: #fff3c4; }
+    a.botao, label.botao { text-decoration: none; display: inline-flex; align-items: center; }
+    button:hover, select:hover, a.botao:hover, label.botao:hover { background: #fff3c4; }
     button:active, a.botao:active { transform: translateY(2px); box-shadow: none; }
+    button:disabled { opacity: 0.5; cursor: default; box-shadow: none; transform: none; background: #fcfbf6; }
     button:focus-visible, select:focus-visible, a.botao:focus-visible { outline: 3px solid var(--filete); outline-offset: 2px; }
     select { padding-right: 4px; max-width: 128px; }
     .lista-agentes select { width: 124px; font-size: 13px; }
@@ -120,6 +127,70 @@
       color: #262236; background: #fcfbf6; border: 2px solid #262236; border-bottom: 3px solid var(--cor);
     }
     .rotulo.rotulo-posto { background: #ebe8df; border-style: dashed; border-bottom-style: solid; color: #4c4757; }
+
+    /* Conversa com um agente: caixa de diálogo grande à esquerda (tela cheia no celular) */
+    .conversa {
+      position: fixed; z-index: 5; display: flex; flex-direction: column; gap: 8px;
+      left: calc(16px + env(safe-area-inset-left, 0px)); top: calc(16px + env(safe-area-inset-top, 0px));
+      bottom: calc(96px + env(safe-area-inset-bottom, 0px)); width: min(560px, 44vw); padding: 12px;
+      box-shadow: inset 0 0 0 2px var(--papel), inset 0 0 0 4px var(--cor, var(--filete)), 0 4px 0 var(--sombra);
+    }
+    .conversa[hidden] { display: none; }
+    body.conversando .titulo { display: none; }
+    .conversa > header { display: flex; align-items: center; gap: 10px; }
+    .conversa > header div { flex: 1; min-width: 0; display: grid; }
+    .conversa > header b { font-size: 18px; font-weight: 600; }
+    .conversa > header small { color: var(--suave); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .conversa > header button { font-size: 13px; padding: 3px 8px; min-height: 28px; }
+    .conversa button.perigo { background: #f2665c; color: #262236; }
+    .mensagens {
+      flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
+      padding: 4px 4px 8px; border-top: 2px dashed var(--papel-2); border-bottom: 2px dashed var(--papel-2);
+      font: 15px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: auto;
+    }
+    .msg { max-width: 94%; padding: 8px 11px; border-radius: 8px; min-width: 0; }
+    .msg > header { font: 600 13px/1.2 var(--fonte); margin-bottom: 4px; color: var(--suave); }
+    .msg-agente { align-self: flex-start; background: var(--papel-2); border-left: 4px solid var(--cor, var(--filete)); }
+    .msg-usuario { align-self: flex-end; background: transparent; border: 2px solid var(--papel-2); }
+    .msg-usuario .corpo { white-space: pre-wrap; }
+    .msg-sistema { align-self: center; color: var(--suave); font-size: 14px; }
+    .msg .corpo > :first-child { margin-top: 0; }
+    .msg .corpo > :last-child { margin-bottom: 0; }
+    .msg .corpo p, .msg .corpo ul, .msg .corpo ol { margin: 6px 0; }
+    .msg .corpo ul, .msg .corpo ol { padding-left: 20px; }
+    .msg .corpo h1, .msg .corpo h2, .msg .corpo h3, .msg .corpo h4 { font: 600 16px/1.3 var(--fonte); margin: 12px 0 4px; }
+    .msg .corpo code { font-size: 13px; background: var(--papel); padding: 0 3px; border-radius: 3px; }
+    .msg .corpo a { color: inherit; }
+    .msg .tabela { overflow-x: auto; margin: 6px 0; }
+    .msg table { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+    .msg th, .msg td { border: 1px solid var(--borda-suave); padding: 3px 7px; text-align: left; white-space: nowrap; }
+    .msg th { background: var(--papel); }
+    .anexos-msg, .status-msg { margin: 6px 0 0; font-size: 13px; color: var(--suave); }
+    .status-msg::before { content: "● "; }
+    .status-alerta::before { color: #c62828; }
+    .status-pensando::before { color: #4a8fd6; }
+    .status-concluido::before { color: #2e7d32; }
+    .digitando { color: var(--suave); margin: 0; }
+    .digitando span { animation: piscarPonto 1.2s steps(2) infinite; }
+    .digitando span:nth-child(2) { animation-delay: 0.2s; }
+    .digitando span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes piscarPonto { 50% { opacity: 0; } }
+    #conversa-form { display: grid; gap: 6px; }
+    #conversa-texto {
+      width: 100%; resize: none; min-height: 44px; max-height: 140px; padding: 8px 10px;
+      font: 15px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--tinta); background: var(--papel-2); border: 2px solid var(--borda); border-radius: 6px;
+    }
+    #conversa-texto:focus-visible { outline: 3px solid var(--filete); outline-offset: 1px; }
+    .linha-envio { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+    .linha-envio small { color: var(--suave); font-size: 13px; }
+    .anexos { display: flex; flex-wrap: wrap; gap: 6px; }
+    .anexo { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; padding: 2px 4px 2px 8px; border-radius: 4px; background: var(--papel-2); }
+    .anexo button { min-height: 22px; padding: 0 6px; font-size: 12px; box-shadow: none; }
+    label.botao { cursor: pointer; }
+    label.botao:has(input:disabled) { opacity: 0.5; cursor: default; }
+    #conversa-nota { margin: 0; font-size: 14px; color: var(--suave); }
+    #conversa-nota.aviso { color: var(--tinta); }
 
     #carregando { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
     #aviso { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); max-width: min(92vw, 460px); font-size: 15px; }
@@ -141,6 +212,8 @@
       .barra { left: calc(16px + env(safe-area-inset-left, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); transform: none; padding: 8px; gap: 6px; }
       .barra .sep { display: none; }
       #aviso { bottom: auto; top: 64px; }
+      .conversa { inset: calc(8px + env(safe-area-inset-top, 0px)) calc(8px + env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) calc(8px + env(safe-area-inset-left, 0px)); width: auto; z-index: 20; }
+      .linha-envio small { display: none; }
     }
     @media (prefers-reduced-motion: reduce) { .lista-agentes li.piscar { animation: none; outline: 3px solid var(--cor); } }
   </style>
@@ -180,6 +253,29 @@
       </select>
     </label>
   </nav>
+
+  <section id="conversa" class="caixa conversa" aria-label="Conversa com o agente" hidden>
+    <header>
+      <img id="conversa-cracha" class="cracha" src="" alt="" width="26" height="26">
+      <div><b id="conversa-nome"></b><small id="conversa-titulo"></small></div>
+      <button id="conversa-nova" type="button">Nova conversa</button>
+      <button id="conversa-fechar" type="button" class="icone" aria-label="Fechar a conversa">✕</button>
+    </header>
+    <div id="conversa-mensagens" class="mensagens" aria-live="polite"></div>
+    <form id="conversa-form">
+      <div id="conversa-anexos" class="anexos" hidden></div>
+      <textarea id="conversa-texto" rows="2" aria-label="Mensagem"></textarea>
+      <div class="linha-envio">
+        <label class="botao">Anexar
+          <input id="conversa-arquivo" type="file" multiple hidden accept=".csv,.ofx,.qif,.txt,.tsv,.json,.pdf,image/png,image/jpeg,image/webp">
+        </label>
+        <small>CSV, OFX ou print da fatura · Enter envia</small>
+        <button id="conversa-enviar" type="submit">Enviar</button>
+        <button id="conversa-parar" type="button" hidden>Parar</button>
+      </div>
+    </form>
+    <p id="conversa-nota" role="status" hidden></p>
+  </section>
 
   <div id="carregando" class="caixa" role="status">Carregando o escritório…</div>
   <div id="aviso" class="caixa" role="alert" hidden></div>
