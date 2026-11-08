@@ -19,6 +19,7 @@
   <style>
     :root {
       --tinta: #262236;
+      --borda: #262236;
       --papel: #fcfbf6;
       --papel-2: #ebe8df;
       --filete: #7fd4c4;
@@ -31,6 +32,7 @@
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
         --tinta: #f4f1ea;
+        --borda: #0e0c17;
         --papel: #2b2840;
         --papel-2: #36334d;
         --filete: #46a89d;
@@ -40,6 +42,7 @@
     }
     :root[data-theme="dark"] {
       --tinta: #f4f1ea;
+      --borda: #0e0c17;
       --papel: #2b2840;
       --papel-2: #36334d;
       --filete: #46a89d;
@@ -60,17 +63,18 @@
     /* Caixa de diálogo de RPG de bolso: borda escura + filete colorido por dentro */
     .caixa {
       background: var(--papel);
-      border: 3px solid #262236;
+      border: 3px solid var(--borda);
       border-radius: 10px;
       box-shadow: inset 0 0 0 2px var(--papel), inset 0 0 0 4px var(--filete), 0 4px 0 var(--sombra);
       padding: 12px 14px;
     }
 
-    .titulo { position: fixed; top: 16px; left: 16px; max-width: 340px; }
+    /* afastamentos somam as áreas seguras do celular (entalhe, barra de gestos) */
+    .titulo { position: fixed; top: calc(16px + env(safe-area-inset-top, 0px)); left: calc(16px + env(safe-area-inset-left, 0px)); max-width: 340px; }
     .titulo h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: 0.5px; }
     .titulo p { margin: 4px 0 0; color: var(--suave); font-size: 15px; }
 
-    .painel { position: fixed; top: 16px; right: 16px; width: 316px; max-height: calc(100% - 120px); overflow: auto; }
+    .painel { position: fixed; top: calc(16px + env(safe-area-inset-top, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); width: 316px; max-height: calc(100% - 120px); overflow: auto; }
     .painel h2 { margin: 0 0 8px; font-size: 17px; font-weight: 600; display: flex; justify-content: space-between; align-items: baseline; }
     .painel h2 small { font-size: 13px; font-weight: 400; color: var(--suave); }
     #lista-mesas { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
@@ -99,7 +103,7 @@
     select { padding-right: 4px; max-width: 128px; }
     #lista-mesas select { max-width: 112px; font-size: 13px; }
 
-    .barra { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; padding: 10px 12px; }
+    .barra { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; padding: 10px 12px; }
     .barra label { display: flex; gap: 6px; align-items: center; font-size: 14px; }
     .barra .sep { width: 2px; align-self: stretch; background: var(--papel-2); }
     #btn-demo { background: #ffd85e; }
@@ -119,16 +123,16 @@
     body.sem-ui .titulo, body.sem-ui .painel, body.sem-ui .barra { display: none; }
 
     @media (max-width: 760px) {
-      .titulo { top: 10px; left: 10px; right: 10px; max-width: none; padding: 8px 12px; }
+      .titulo { top: calc(10px + env(safe-area-inset-top, 0px)); left: calc(16px + env(safe-area-inset-left, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); max-width: none; padding: 8px 12px; }
       .titulo h1 { font-size: 18px; }
       .titulo p { display: none; }
-      .painel { top: auto; bottom: 110px; left: 16px; right: 16px; width: auto; max-height: 32%; padding: 8px 10px; }
+      .painel { top: auto; bottom: calc(110px + env(safe-area-inset-bottom, 0px)); left: calc(16px + env(safe-area-inset-left, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); width: auto; max-height: 32%; padding: 8px 10px; }
       .painel h2 { display: none; }
       #lista-mesas { gap: 4px; }
       #lista-mesas li { padding: 4px 6px; gap: 6px; }
       .info small { display: none; }
       .rotulo { font-size: 11px; }
-      .barra { left: 16px; right: 16px; bottom: 10px; transform: none; padding: 8px; gap: 6px; }
+      .barra { left: calc(16px + env(safe-area-inset-left, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); transform: none; padding: 8px; gap: 6px; }
       .barra .sep { display: none; }
       #aviso { bottom: auto; top: 64px; }
     }
