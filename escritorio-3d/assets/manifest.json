@@ -79,82 +79,194 @@
   "fps": 8,
   "tipo": "sprite"
  },
- "mesa_painel_1": {
-  "arquivo": "mesa_painel_1.png",
+ "painel_financas": {
+  "arquivo": "painel_financas.png",
   "w": 30,
   "h": 10,
   "quadros": 1,
   "fps": 8,
   "tipo": "sprite"
  },
- "mesa_painel_2": {
-  "arquivo": "mesa_painel_2.png",
+ "painel_investimentos": {
+  "arquivo": "painel_investimentos.png",
   "w": 30,
   "h": 10,
   "quadros": 1,
   "fps": 8,
   "tipo": "sprite"
  },
- "mesa_painel_3": {
-  "arquivo": "mesa_painel_3.png",
+ "painel_agenda": {
+  "arquivo": "painel_agenda.png",
   "w": 30,
   "h": 10,
   "quadros": 1,
   "fps": 8,
   "tipo": "sprite"
  },
- "mesa_painel_4": {
-  "arquivo": "mesa_painel_4.png",
+ "painel_emails": {
+  "arquivo": "painel_emails.png",
   "w": 30,
   "h": 10,
   "quadros": 1,
   "fps": 8,
   "tipo": "sprite"
  },
- "mesa_painel_5": {
-  "arquivo": "mesa_painel_5.png",
-  "w": 30,
-  "h": 10,
-  "quadros": 1,
-  "fps": 8,
-  "tipo": "sprite"
- },
- "cadeira_1": {
-  "arquivo": "cadeira_1.png",
+ "cadeira_financas": {
+  "arquivo": "cadeira_financas.png",
   "w": 16,
   "h": 16,
   "quadros": 1,
   "fps": 8,
   "tipo": "sprite"
  },
- "cadeira_2": {
-  "arquivo": "cadeira_2.png",
+ "cadeira_investimentos": {
+  "arquivo": "cadeira_investimentos.png",
   "w": 16,
   "h": 16,
   "quadros": 1,
   "fps": 8,
   "tipo": "sprite"
  },
- "cadeira_3": {
-  "arquivo": "cadeira_3.png",
+ "cadeira_agenda": {
+  "arquivo": "cadeira_agenda.png",
   "w": 16,
   "h": 16,
   "quadros": 1,
   "fps": 8,
   "tipo": "sprite"
  },
- "cadeira_4": {
-  "arquivo": "cadeira_4.png",
+ "cadeira_emails": {
+  "arquivo": "cadeira_emails.png",
   "w": 16,
   "h": 16,
   "quadros": 1,
   "fps": 8,
   "tipo": "sprite"
  },
- "cadeira_5": {
-  "arquivo": "cadeira_5.png",
-  "w": 16,
-  "h": 16,
+ "icone_financas": {
+  "arquivo": "icone_financas.png",
+  "w": 13,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "icone_investimentos": {
+  "arquivo": "icone_investimentos.png",
+  "w": 13,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "icone_terapeuta": {
+  "arquivo": "icone_terapeuta.png",
+  "w": 13,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "icone_agenda": {
+  "arquivo": "icone_agenda.png",
+  "w": 13,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "icone_emails": {
+  "arquivo": "icone_emails.png",
+  "w": 13,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "icone_nutricao": {
+  "arquivo": "icone_nutricao.png",
+  "w": 13,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "icone_exercicios": {
+  "arquivo": "icone_exercicios.png",
+  "w": 13,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "icone_aprendizado": {
+  "arquivo": "icone_aprendizado.png",
+  "w": 13,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "placa_financas": {
+  "arquivo": "placa_financas.png",
+  "w": 26,
+  "h": 21,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "placa_investimentos": {
+  "arquivo": "placa_investimentos.png",
+  "w": 26,
+  "h": 21,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "placa_terapeuta": {
+  "arquivo": "placa_terapeuta.png",
+  "w": 26,
+  "h": 21,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "placa_agenda": {
+  "arquivo": "placa_agenda.png",
+  "w": 26,
+  "h": 21,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "placa_emails": {
+  "arquivo": "placa_emails.png",
+  "w": 26,
+  "h": 21,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "placa_nutricao": {
+  "arquivo": "placa_nutricao.png",
+  "w": 26,
+  "h": 21,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "placa_exercicios": {
+  "arquivo": "placa_exercicios.png",
+  "w": 26,
+  "h": 21,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "placa_aprendizado": {
+  "arquivo": "placa_aprendizado.png",
+  "w": 26,
+  "h": 21,
   "quadros": 1,
   "fps": 8,
   "tipo": "sprite"
@@ -279,6 +391,126 @@
   "fps": 8,
   "tipo": "sprite"
  },
+ "calculadora": {
+  "arquivo": "calculadora.png",
+  "w": 9,
+  "h": 11,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "cofrinho": {
+  "arquivo": "cofrinho.png",
+  "w": 13,
+  "h": 10,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "calendario_mesa": {
+  "arquivo": "calendario_mesa.png",
+  "w": 11,
+  "h": 11,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "bandeja_cartas": {
+  "arquivo": "bandeja_cartas.png",
+  "w": 13,
+  "h": 9,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "tabua_legumes": {
+  "arquivo": "tabua_legumes.png",
+  "w": 16,
+  "h": 10,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "cardapio": {
+  "arquivo": "cardapio.png",
+  "w": 24,
+  "h": 20,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "luminaria": {
+  "arquivo": "luminaria.png",
+  "w": 11,
+  "h": 30,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "pilha_livros": {
+  "arquivo": "pilha_livros.png",
+  "w": 14,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "rack_halteres": {
+  "arquivo": "rack_halteres.png",
+  "w": 16,
+  "h": 24,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "kettlebell": {
+  "arquivo": "kettlebell.png",
+  "w": 10,
+  "h": 11,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "tapete_yoga": {
+  "arquivo": "tapete_yoga.png",
+  "w": 16,
+  "h": 32,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "piso_cozinha": {
+  "arquivo": "piso_cozinha.png",
+  "w": 16,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "tapete_redondo": {
+  "arquivo": "tapete_redondo.png",
+  "w": 32,
+  "h": 24,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "poltrona_terapeuta": {
+  "arquivo": "poltrona_terapeuta.png",
+  "w": 16,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "poltrona_aprendizado": {
+  "arquivo": "poltrona_aprendizado.png",
+  "w": 16,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
  "balao_digitando": {
   "arquivo": "balao_digitando.png",
   "w": 14,
@@ -319,47 +551,15 @@
   "fps": 2,
   "tipo": "anim"
  },
- "agente_frente": {
-  "arquivo": "agente_frente.png",
-  "w": 16,
-  "h": 24,
-  "quadros": 3,
-  "fps": 6,
-  "tipo": "anim"
- },
- "agente_costas": {
-  "arquivo": "agente_costas.png",
-  "w": 16,
-  "h": 24,
-  "quadros": 3,
-  "fps": 6,
-  "tipo": "anim"
- },
- "agente_lado": {
-  "arquivo": "agente_lado.png",
-  "w": 16,
-  "h": 24,
-  "quadros": 3,
-  "fps": 6,
-  "tipo": "anim"
- },
- "agente_sentado": {
-  "arquivo": "agente_sentado.png",
-  "w": 16,
-  "h": 24,
-  "quadros": 2,
-  "fps": 5,
-  "tipo": "anim"
- },
- "agente_1": {
-  "arquivo": "agente_1.png",
-  "w": 176,
+ "agente_financas": {
+  "arquivo": "agente_financas.png",
+  "w": 240,
   "h": 24,
   "quadros": 1,
   "fps": 0,
   "tipo": "sheet",
   "rects": {
-   "_frente_1": {
+   "_frente_financas": {
     "x": 0,
     "y": 0,
     "w": 16,
@@ -367,7 +567,7 @@
     "quadros": 3,
     "fps": 6
    },
-   "_costas_1": {
+   "_costas_financas": {
     "x": 48,
     "y": 0,
     "w": 16,
@@ -375,7 +575,7 @@
     "quadros": 3,
     "fps": 6
    },
-   "_lado_1": {
+   "_lado_financas": {
     "x": 96,
     "y": 0,
     "w": 16,
@@ -383,25 +583,41 @@
     "quadros": 3,
     "fps": 6
    },
-   "_sentado_1": {
+   "_sentado_financas": {
     "x": 144,
     "y": 0,
     "w": 16,
     "h": 24,
     "quadros": 2,
     "fps": 5
+   },
+   "_lendo_financas": {
+    "x": 176,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 2
+   },
+   "_exercitando_financas": {
+    "x": 208,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 3
    }
   }
  },
- "agente_2": {
-  "arquivo": "agente_2.png",
-  "w": 176,
+ "agente_investimentos": {
+  "arquivo": "agente_investimentos.png",
+  "w": 240,
   "h": 24,
   "quadros": 1,
   "fps": 0,
   "tipo": "sheet",
   "rects": {
-   "_frente_2": {
+   "_frente_investimentos": {
     "x": 0,
     "y": 0,
     "w": 16,
@@ -409,7 +625,7 @@
     "quadros": 3,
     "fps": 6
    },
-   "_costas_2": {
+   "_costas_investimentos": {
     "x": 48,
     "y": 0,
     "w": 16,
@@ -417,7 +633,7 @@
     "quadros": 3,
     "fps": 6
    },
-   "_lado_2": {
+   "_lado_investimentos": {
     "x": 96,
     "y": 0,
     "w": 16,
@@ -425,25 +641,41 @@
     "quadros": 3,
     "fps": 6
    },
-   "_sentado_2": {
+   "_sentado_investimentos": {
     "x": 144,
     "y": 0,
     "w": 16,
     "h": 24,
     "quadros": 2,
     "fps": 5
+   },
+   "_lendo_investimentos": {
+    "x": 176,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 2
+   },
+   "_exercitando_investimentos": {
+    "x": 208,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 3
    }
   }
  },
- "agente_3": {
-  "arquivo": "agente_3.png",
-  "w": 176,
+ "agente_terapeuta": {
+  "arquivo": "agente_terapeuta.png",
+  "w": 240,
   "h": 24,
   "quadros": 1,
   "fps": 0,
   "tipo": "sheet",
   "rects": {
-   "_frente_3": {
+   "_frente_terapeuta": {
     "x": 0,
     "y": 0,
     "w": 16,
@@ -451,7 +683,7 @@
     "quadros": 3,
     "fps": 6
    },
-   "_costas_3": {
+   "_costas_terapeuta": {
     "x": 48,
     "y": 0,
     "w": 16,
@@ -459,7 +691,7 @@
     "quadros": 3,
     "fps": 6
    },
-   "_lado_3": {
+   "_lado_terapeuta": {
     "x": 96,
     "y": 0,
     "w": 16,
@@ -467,25 +699,41 @@
     "quadros": 3,
     "fps": 6
    },
-   "_sentado_3": {
+   "_sentado_terapeuta": {
     "x": 144,
     "y": 0,
     "w": 16,
     "h": 24,
     "quadros": 2,
     "fps": 5
+   },
+   "_lendo_terapeuta": {
+    "x": 176,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 2
+   },
+   "_exercitando_terapeuta": {
+    "x": 208,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 3
    }
   }
  },
- "agente_4": {
-  "arquivo": "agente_4.png",
-  "w": 176,
+ "agente_agenda": {
+  "arquivo": "agente_agenda.png",
+  "w": 240,
   "h": 24,
   "quadros": 1,
   "fps": 0,
   "tipo": "sheet",
   "rects": {
-   "_frente_4": {
+   "_frente_agenda": {
     "x": 0,
     "y": 0,
     "w": 16,
@@ -493,7 +741,7 @@
     "quadros": 3,
     "fps": 6
    },
-   "_costas_4": {
+   "_costas_agenda": {
     "x": 48,
     "y": 0,
     "w": 16,
@@ -501,7 +749,7 @@
     "quadros": 3,
     "fps": 6
    },
-   "_lado_4": {
+   "_lado_agenda": {
     "x": 96,
     "y": 0,
     "w": 16,
@@ -509,25 +757,41 @@
     "quadros": 3,
     "fps": 6
    },
-   "_sentado_4": {
+   "_sentado_agenda": {
     "x": 144,
     "y": 0,
     "w": 16,
     "h": 24,
     "quadros": 2,
     "fps": 5
+   },
+   "_lendo_agenda": {
+    "x": 176,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 2
+   },
+   "_exercitando_agenda": {
+    "x": 208,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 3
    }
   }
  },
- "agente_5": {
-  "arquivo": "agente_5.png",
-  "w": 176,
+ "agente_emails": {
+  "arquivo": "agente_emails.png",
+  "w": 240,
   "h": 24,
   "quadros": 1,
   "fps": 0,
   "tipo": "sheet",
   "rects": {
-   "_frente_5": {
+   "_frente_emails": {
     "x": 0,
     "y": 0,
     "w": 16,
@@ -535,7 +799,7 @@
     "quadros": 3,
     "fps": 6
    },
-   "_costas_5": {
+   "_costas_emails": {
     "x": 48,
     "y": 0,
     "w": 16,
@@ -543,7 +807,7 @@
     "quadros": 3,
     "fps": 6
    },
-   "_lado_5": {
+   "_lado_emails": {
     "x": 96,
     "y": 0,
     "w": 16,
@@ -551,13 +815,203 @@
     "quadros": 3,
     "fps": 6
    },
-   "_sentado_5": {
+   "_sentado_emails": {
     "x": 144,
     "y": 0,
     "w": 16,
     "h": 24,
     "quadros": 2,
     "fps": 5
+   },
+   "_lendo_emails": {
+    "x": 176,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 2
+   },
+   "_exercitando_emails": {
+    "x": 208,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 3
+   }
+  }
+ },
+ "agente_nutricao": {
+  "arquivo": "agente_nutricao.png",
+  "w": 240,
+  "h": 24,
+  "quadros": 1,
+  "fps": 0,
+  "tipo": "sheet",
+  "rects": {
+   "_frente_nutricao": {
+    "x": 0,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_costas_nutricao": {
+    "x": 48,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_lado_nutricao": {
+    "x": 96,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_sentado_nutricao": {
+    "x": 144,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 5
+   },
+   "_lendo_nutricao": {
+    "x": 176,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 2
+   },
+   "_exercitando_nutricao": {
+    "x": 208,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 3
+   }
+  }
+ },
+ "agente_exercicios": {
+  "arquivo": "agente_exercicios.png",
+  "w": 240,
+  "h": 24,
+  "quadros": 1,
+  "fps": 0,
+  "tipo": "sheet",
+  "rects": {
+   "_frente_exercicios": {
+    "x": 0,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_costas_exercicios": {
+    "x": 48,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_lado_exercicios": {
+    "x": 96,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_sentado_exercicios": {
+    "x": 144,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 5
+   },
+   "_lendo_exercicios": {
+    "x": 176,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 2
+   },
+   "_exercitando_exercicios": {
+    "x": 208,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 3
+   }
+  }
+ },
+ "agente_aprendizado": {
+  "arquivo": "agente_aprendizado.png",
+  "w": 240,
+  "h": 24,
+  "quadros": 1,
+  "fps": 0,
+  "tipo": "sheet",
+  "rects": {
+   "_frente_aprendizado": {
+    "x": 0,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_costas_aprendizado": {
+    "x": 48,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_lado_aprendizado": {
+    "x": 96,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_sentado_aprendizado": {
+    "x": 144,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 5
+   },
+   "_lendo_aprendizado": {
+    "x": 176,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 2
+   },
+   "_exercitando_aprendizado": {
+    "x": 208,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 3
    }
   }
  }

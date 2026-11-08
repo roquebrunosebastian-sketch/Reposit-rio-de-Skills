@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Escritório de Agentes</title>
-  <meta name="description" content="Escritório moderno em 3D com visual de RPG em pixel art e 5 mesas prontas para receber agentes animados.">
+  <meta name="description" content="Escritório moderno em 3D com visual de RPG em pixel art, com um posto temático para cada um dos seus agentes.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -74,40 +74,44 @@
     .titulo h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: 0.5px; }
     .titulo p { margin: 4px 0 0; color: var(--suave); font-size: 15px; }
 
-    .painel { position: fixed; top: calc(16px + env(safe-area-inset-top, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); width: 316px; max-height: calc(100% - 120px); overflow: auto; }
-    .painel h2 { margin: 0 0 8px; font-size: 17px; font-weight: 600; display: flex; justify-content: space-between; align-items: baseline; }
+    .painel { position: fixed; top: calc(16px + env(safe-area-inset-top, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); width: 350px; max-height: calc(100% - 120px); overflow: auto; }
+    .painel h2 { margin: 0 0 8px; font-size: 17px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
     .painel h2 small { font-size: 13px; font-weight: 400; color: var(--suave); }
-    #lista-mesas { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-    #lista-mesas li {
-      display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 8px;
+    .painel h2.secao-futuros { margin-top: 14px; padding-top: 10px; border-top: 2px dashed var(--papel-2); }
+    .lista-agentes { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+    .lista-agentes li {
+      display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px;
       padding: 6px 8px; border-radius: 6px; background: var(--papel-2); border-left: 5px solid var(--cor);
     }
-    #lista-mesas li.piscar { animation: piscar 0.9s steps(3) 2; }
+    .lista-agentes li.futuro { background: transparent; border: 2px dashed var(--papel-2); border-left: 5px dashed var(--cor); }
+    .lista-agentes li.futuro .cracha { opacity: 0.75; }
+    .lista-agentes li.piscar { animation: piscar 0.9s steps(3) 2; }
     @keyframes piscar { 50% { outline: 3px solid var(--cor); } }
-    .chip {
-      width: 24px; height: 24px; border-radius: 5px; display: grid; place-items: center;
-      background: var(--cor); color: #262236; font-weight: 600; border: 2px solid #262236;
-    }
+    .cracha { width: 26px; height: 26px; image-rendering: pixelated; display: block; }
+    .acoes { display: flex; gap: 6px; align-items: center; justify-content: flex-end; }
     .info { display: grid; min-width: 0; }
     .info b { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .info small { color: var(--suave); font-size: 13px; }
 
-    button, select {
+    button, select, a.botao {
       font: inherit; font-size: 14px; color: #262236; background: #fcfbf6;
       border: 2px solid #262236; border-radius: 6px; padding: 4px 9px; cursor: pointer;
       box-shadow: 0 2px 0 #262236; min-height: 30px;
     }
-    button:hover, select:hover { background: #fff3c4; }
-    button:active { transform: translateY(2px); box-shadow: none; }
-    button:focus-visible, select:focus-visible { outline: 3px solid var(--filete); outline-offset: 2px; }
+    a.botao { text-decoration: none; display: inline-flex; align-items: center; }
+    button:hover, select:hover, a.botao:hover { background: #fff3c4; }
+    button:active, a.botao:active { transform: translateY(2px); box-shadow: none; }
+    button:focus-visible, select:focus-visible, a.botao:focus-visible { outline: 3px solid var(--filete); outline-offset: 2px; }
     select { padding-right: 4px; max-width: 128px; }
-    #lista-mesas select { max-width: 112px; font-size: 13px; }
+    .lista-agentes select { width: 124px; font-size: 13px; }
+    .lista-agentes button, .lista-agentes a.botao, .painel h2 button { font-size: 13px; padding: 3px 8px; min-height: 28px; }
+    .lista-agentes button.icone { padding: 3px 0; width: 28px; justify-content: center; }
 
     .barra { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; padding: 10px 12px; }
     .barra label { display: flex; gap: 6px; align-items: center; font-size: 14px; }
     .barra .sep { width: 2px; align-self: stretch; background: var(--papel-2); }
-    #btn-demo { background: #ffd85e; }
-    #btn-demo:hover { background: #ffe58f; }
+    #btn-simular { background: #ffd85e; }
+    #btn-simular:hover { background: #ffe58f; }
 
     #rotulos { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
     .rotulo {
@@ -115,6 +119,7 @@
       font-size: 12px; line-height: 1; padding: 3px 6px 4px; border-radius: 4px;
       color: #262236; background: #fcfbf6; border: 2px solid #262236; border-bottom: 3px solid var(--cor);
     }
+    .rotulo.rotulo-posto { background: #ebe8df; border-style: dashed; border-bottom-style: solid; color: #4c4757; }
 
     #carregando { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
     #aviso { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); max-width: min(92vw, 460px); font-size: 15px; }
@@ -127,35 +132,37 @@
       .titulo h1 { font-size: 18px; }
       .titulo p { display: none; }
       .painel { top: auto; bottom: calc(110px + env(safe-area-inset-bottom, 0px)); left: calc(16px + env(safe-area-inset-left, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); width: auto; max-height: 32%; padding: 8px 10px; }
-      .painel h2 { display: none; }
-      #lista-mesas { gap: 4px; }
-      #lista-mesas li { padding: 4px 6px; gap: 6px; }
+      .painel h2 { display: flex; font-size: 14px; margin-bottom: 6px; }
+      .painel h2.secao-futuros { margin-top: 8px; padding-top: 6px; }
+      .lista-agentes { gap: 4px; }
+      .lista-agentes li { padding: 4px 6px; gap: 6px; }
       .info small { display: none; }
       .rotulo { font-size: 11px; }
       .barra { left: calc(16px + env(safe-area-inset-left, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); transform: none; padding: 8px; gap: 6px; }
       .barra .sep { display: none; }
       #aviso { bottom: auto; top: 64px; }
     }
-    @media (prefers-reduced-motion: reduce) { #lista-mesas li.piscar { animation: none; outline: 3px solid var(--cor); } }
+    @media (prefers-reduced-motion: reduce) { .lista-agentes li.piscar { animation: none; outline: 3px solid var(--cor); } }
   </style>
 </head>
 <body>
-  <canvas id="tela" aria-label="Escritório 3D em pixel art com cinco mesas"></canvas>
+  <canvas id="tela" aria-label="Escritório 3D em pixel art com os postos dos oito agentes"></canvas>
   <div id="rotulos" aria-hidden="true"></div>
 
   <header class="caixa titulo">
     <h1>Escritório de Agentes</h1>
-    <p>Arraste para girar · role para aproximar · clique numa mesa</p>
+    <p>Arraste para girar · role para aproximar · clique num agente</p>
   </header>
 
-  <aside class="caixa painel" aria-label="Mesas">
-    <h2>Mesas <small>5 posições</small></h2>
-    <ul id="lista-mesas"></ul>
+  <aside class="caixa painel" aria-label="Agentes">
+    <h2>No escritório <small id="contagem-ativos"></small></h2>
+    <ul id="lista-ativos" class="lista-agentes"></ul>
+    <h2 class="secao-futuros">Em breve <button id="btn-previa" type="button" aria-pressed="false">Ver prévia</button></h2>
+    <ul id="lista-futuros" class="lista-agentes"></ul>
   </aside>
 
   <nav class="caixa barra" aria-label="Controles">
-    <button id="btn-demo" type="button">▶ Demonstração</button>
-    <button id="btn-esvaziar" type="button">Esvaziar</button>
+    <button id="btn-simular" type="button" aria-pressed="false">▶ Simular atividade</button>
     <span class="sep" aria-hidden="true"></span>
     <label>Câmera
       <select id="sel-camera">

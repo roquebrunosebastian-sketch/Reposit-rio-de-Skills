@@ -505,7 +505,13 @@ function carregar(arquivo) {
   for (const n of ["px", "rect", "box", "hline", "vline", "line", "circ", "ring", "ellipse", "poly", "fill", "text",
     "grid", "shade", "light", "noise", "dither", "grad", "recolor", "stamp", "tile"]) dsl[n] = op(n);
   const codigo = fs.readFileSync(arquivo, "utf8");
-  vm.runInNewContext(codigo, dsl, { filename: arquivo });
+  try {
+    vm.runInNewContext(codigo, dsl, { filename: arquivo });
+  } catch (e) {
+    const linha = (e.stack || "").split("\n").find((l) => l.includes(path.basename(arquivo)));
+    console.error(`✗ ${arquivo}: ${e.message}${linha ? "\n   " + linha.trim() : ""}`);
+    process.exit(1);
+  }
   return mundo;
 }
 

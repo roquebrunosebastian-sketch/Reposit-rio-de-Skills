@@ -11,4 +11,4 @@ Armazenamento de Skills para uso no Claude
 
 | Projeto | Descrição |
 | --- | --- |
-| [`escritorio-3d`](escritorio-3d/README.md) | escritório moderno em 3D, no visual dos RPGs de bolso em pixel art, com 5 mesas prontas para agentes animados (arte feita com a skill `pxl-pixel-art`) |
+| [`escritorio-3d`](escritorio-3d/README.md) | escritório moderno em 3D, no visual dos RPGs de bolso em pixel art, com um posto temático para cada agente (Finanças, Investimentos, Terapeuta e mais 5 em breve); arte feita com a skill `pxl-pixel-art` |

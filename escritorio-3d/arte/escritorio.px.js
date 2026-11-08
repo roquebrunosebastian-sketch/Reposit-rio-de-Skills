@@ -20,8 +20,8 @@ pal({
   B: "#2f5a9e", b: "#4a8fd6", S: "#7cc4ef", s: "#bfe8fa",
   // cores das 5 mesas
   R: "#b83f45", r: "#f2665c", E: "#d9a032", e: "#ffd85e", P: "#7d5bbf", p: "#b995ea",
-  // terracota
-  A: "#c46d3d", a: "#f0a067",
+  // terracota e rosa
+  A: "#c46d3d", a: "#f0a067", L: "#c4628f", l: "#f59ac0",
   // peles e cabelos
   C: "#eaa983", c: "#ffdcb8", Q: "#c98a5e", q: "#e8b88a", F: "#7d4f33", f: "#a8714c",
   H: "#432a1e", h: "#6b4430",
@@ -33,25 +33,89 @@ pal({
   X: "#b83f45", x: "#f2665c", J: "#283358", j: "#3b4a78",
 })
 
-ramps("kKuVvWw", "kNnOo", "yTt", "dGg", "BbSs", "Rr", "Ee", "Pp", "Aa", "Cc", "Qq", "Ff", "Hh", "zZ", "kMm", "Xx", "Jj")
+ramps("kKuVvWw", "kNnOo", "yTt", "dGg", "BbSs", "Rr", "Ee", "Pp", "Aa", "Cc", "Qq", "Ff", "Hh", "zZ", "kMm", "Xx", "Jj", "Ll")
 
-// Cores de destaque de cada mesa (camisa do agente, cadeira, faixa do painel)
-const CORES = [
-  { x: "r", X: "R" },   // 1 — vermelho
-  { x: "b", X: "B" },   // 2 — azul
-  { x: "G", X: "d" },   // 3 — verde
-  { x: "e", X: "E" },   // 4 — amarelo
-  { x: "p", X: "P" },   // 5 — roxo
-]
+// Os 8 agentes: cor de destaque (camisa, cadeira, painel, placa) e aparência (cabelo h/H, pele c/C)
+const AGENTES = {
+  financas: { cor: { x: "G", X: "d" }, visual: {} },
+  investimentos: { cor: { x: "b", X: "B" }, visual: { h: "K", H: "k", c: "q", C: "Q" } },
+  terapeuta: { cor: { x: "p", X: "P" }, visual: { h: "a", H: "A" } },
+  agenda: { cor: { x: "a", X: "A" }, visual: { h: "e", H: "E" } },
+  emails: { cor: { x: "r", X: "R" }, visual: { h: "K", H: "k", c: "f", C: "F" } },
+  nutricao: { cor: { x: "e", X: "E" }, visual: { h: "H", H: "k", c: "q", C: "Q" } },
+  exercicios: { cor: { x: "t", X: "T" }, visual: { h: "N", H: "k", c: "f", C: "F" } },
+  aprendizado: { cor: { x: "l", X: "L" }, visual: { h: "v", H: "V" } },
+}
+const IDS = Object.keys(AGENTES)
+const MESAS = ["financas", "investimentos", "agenda", "emails"]
 
-// Aparência dos agentes de demonstração (cabelo e pele), um por mesa
-const LOOKS = [
-  {},
-  { h: "K", H: "k", c: "q", C: "Q" },
-  { h: "e", H: "E" },
-  { h: "a", H: "A" },
-  { h: "K", H: "k", c: "f", C: "F" },
-]
+// Ícones de 7x7 (brancos; ganham a placa colorida de cada agente)
+const ICONES = {
+  financas: `
+    ...w...
+    .wwwww.
+    ww.w...
+    .wwwww.
+    ...w.ww
+    .wwwww.
+    ...w...`,
+  investimentos: `
+    ...wwww
+    .....ww
+    w...w.w
+    ww.w...
+    w.w....
+    w......
+    wwwwwww`,
+  terapeuta: `
+    .ww.ww.
+    wwwwwww
+    wwwwwww
+    wwwwwww
+    .wwwww.
+    ..www..
+    ...w...`,
+  agenda: `
+    .w...w.
+    wwwwwww
+    w.....w
+    w.w.w.w
+    w.....w
+    w.w.w.w
+    wwwwwww`,
+  emails: `
+    wwwwwww
+    ww...ww
+    w.w.w.w
+    w..w..w
+    w.....w
+    w.....w
+    wwwwwww`,
+  nutricao: `
+    ....w..
+    ...w...
+    .ww.ww.
+    wwwwwww
+    wwwwwww
+    .wwwww.
+    ..w.w..`,
+  exercicios: `
+    .......
+    w.....w
+    ww...ww
+    wwwwwww
+    ww...ww
+    w.....w
+    .......`,
+  aprendizado: `
+    .wwwww.
+    .w...ww
+    .w.w.ww
+    .w...ww
+    .w.w.ww
+    .w...ww
+    .wwwwww`,
+}
 
 // Gerador determinístico (a arte sai igual a cada build)
 let semente = 11
@@ -169,16 +233,42 @@ sprite("mesa_tampo", { w: 32, h: 16 },
   rect(0, 0, 32, 16, "w"), box(0, 0, 32, 16, "W"), hline(1, 14, 30, "W"),
   circ(27.5, 2.5, 1, "K"))                              // passa-cabos
 
+for (const id of IDS) sprite("_icone_" + id, { w: 7, h: 7 }, ICONES[id])
+
+// Painel frontal da mesa: faixa e plaquinha com o ícone, na cor do agente
 sprite("_painel", { w: 30, h: 10 },
   rect(0, 0, 30, 10, "W"), hline(0, 0, 30, "w"), rect(0, 1, 30, 2, "x"), hline(0, 9, 30, "v"),
-  rect(11, 3, 8, 7, "x"), box(11, 3, 8, 7, "X"))
-for (let i = 1; i <= 5; i++)
-  sprite("mesa_painel_" + i, { w: 30, h: 10, swap: CORES[i - 1] }, stamp("_painel", 0, 0), text(13, 4, String(i), "w"))
+  rect(11, 1, 9, 9, "x"), box(11, 1, 9, 9, "X"))
+for (const id of MESAS)
+  sprite("painel_" + id, { w: 30, h: 10, swap: AGENTES[id].cor }, stamp("_painel", 0, 0), stamp("_icone_" + id, 12, 2))
 
-// Cadeira: tecido com costura e gomos verticais, na cor da mesa
+// Cadeira: tecido com costura e gomos verticais, na cor do agente
 sprite("_cadeira", { w: 16, h: 16 },
   rect(0, 0, 16, 16, "x"), box(1, 1, 14, 14, "X"), vline(5, 2, 12, "X"), vline(10, 2, 12, "X"), hline(2, 2, 12, "x"))
-for (let i = 1; i <= 5; i++) sprite("cadeira_" + i, { base: "_cadeira", swap: CORES[i - 1] })
+for (const id of MESAS) sprite("cadeira_" + id, { base: "_cadeira", swap: AGENTES[id].cor })
+
+// Crachá do agente (painel da interface e placas): placa arredondada colorida com o ícone
+sprite("_cracha", { w: 11, h: 11 }, `
+  .xxxxxxxxx.
+  xxxxxxxxxxX
+  xxxxxxxxxxX
+  xxxxxxxxxxX
+  xxxxxxxxxxX
+  xxxxxxxxxxX
+  xxxxxxxxxxX
+  xxxxxxxxxxX
+  xxxxxxxxxxX
+  xxxxxxxxxxX
+  .XXXXXXXXX.`)
+for (const id of IDS)
+  sprite("icone_" + id, { w: 11, h: 11, outline: "k", swap: AGENTES[id].cor }, stamp("_cracha", 0, 0), stamp("_icone_" + id, 2, 2))
+
+// Placa "EM BREVE" (cavalete de giz) com moldura na cor do agente
+sprite("_placa", { w: 24, h: 19 },
+  line(5, 14, 3, 18, "N"), line(18, 14, 20, 18, "N"),
+  rect(1, 0, 22, 15, "K"), box(1, 0, 22, 15, "x"), hline(2, 14, 20, "X"),
+  text(9, 2, "EM", "w"), text(3, 8, "BREVE", "w"))
+for (const id of IDS) sprite("placa_" + id, { w: 24, h: 19, outline: "k", swap: AGENTES[id].cor }, stamp("_placa", 0, 0))
 
 // Monitor: traseira cinza (vista da câmera) e telas (código rolando / descanso)
 sprite("monitor_costas", { w: 16, h: 10 },
@@ -315,6 +405,86 @@ sprite("seta_livre", { w: 9, h: 8, outline: "k" }, `
   ....w....`)
 
 sprite("sombra", { w: 14, h: 6 }, ellipse(6.5, 2.5, 6.5, 2.5, "k"))
+
+// =============================================================================================
+// OBJETOS DOS POSTOS (identificam o trabalho de cada agente)
+
+// Mesa de Finanças: calculadora
+sprite("calculadora", { w: 7, h: 9, outline: "k" },
+  rect(0, 0, 7, 9, "K"), rect(1, 1, 5, 2, "g"), px(5, 1, "d"),
+  (c) => { for (let y = 4; y < 9; y += 2) for (let x = 1; x < 6; x += 2) c.px(x, y, x === 5 && y === 8 ? "r" : "v") })
+
+// Mesa de Investimentos: cofrinho
+sprite("cofrinho", { w: 11, h: 8, outline: "k" }, `
+  ...ll.l....
+  .llllllll..
+  lllkllllll.
+  llllllllLLl
+  llllllllLLL
+  .lllllllll.
+  ..LL...LL..
+  ..LL...LL..`,
+  hline(3, 1, 3, "K"))
+
+// Mesa da Agenda: calendário de mesa
+sprite("calendario_mesa", { w: 9, h: 9, outline: "k" },
+  rect(0, 0, 9, 9, "w"), rect(0, 0, 9, 2, "r"), px(2, 0, "K"), px(6, 0, "K"), text(1, 3, "12", "K"), hline(0, 8, 9, "W"))
+
+// Mesa dos E-mails: bandeja com cartas
+sprite("bandeja_cartas", { w: 11, h: 7, outline: "k" },
+  rect(1, 0, 9, 4, "w"), box(1, 0, 9, 4, "W"), line(1, 0, 5, 2, "V"), line(9, 0, 5, 2, "V"), px(8, 1, "r"),
+  rect(0, 3, 11, 4, "m"), hline(0, 3, 11, "W"), hline(0, 6, 11, "M"))
+
+// Bancada da Nutrição: tábua com legumes, e o quadro de giz do cardápio
+sprite("tabua_legumes", { w: 14, h: 8, outline: "k" },
+  rect(0, 2, 14, 6, "O"), hline(0, 7, 14, "n"), circ(3.5, 3.5, 2, "r"), px(3, 2, "g"),
+  rect(7, 3, 5, 2, "a"), px(12, 3, "g"), px(12, 4, "G"), ellipse(10, 6, 2, 1, "g"))
+
+sprite("cardapio", { w: 24, h: 20 },
+  rect(0, 0, 24, 20, "n"), box(0, 0, 24, 20, "N"), rect(2, 2, 20, 16, "K"),
+  text(4, 3, "HOJE", "e"),
+  hline(4, 10, 9, "v"), hline(4, 13, 11, "v"), hline(4, 16, 7, "v"),
+  circ(18, 12, 2, "r"), px(18, 9, "g"), px(19, 9, "g"))
+
+// Biblioteca: luminária de piso e pilha de livros
+sprite("luminaria", { w: 9, h: 28, outline: "k" },
+  poly([1, 6, 8, 6, 6.5, 0, 2.5, 0], "e"), hline(1, 5, 7, "E"), hline(2, 0, 5, "w"),
+  vline(4, 6, 20, "K"), rect(1, 26, 7, 2, "K"))
+
+sprite("pilha_livros", { w: 12, h: 11, outline: "k" },
+  rect(0, 7, 12, 4, "B"), hline(0, 7, 12, "b"), vline(10, 8, 2, "w"),
+  rect(1, 3, 10, 4, "R"), hline(1, 3, 10, "r"), vline(2, 4, 2, "w"),
+  rect(2, 0, 8, 3, "G"), hline(2, 0, 8, "g"), vline(8, 1, 1, "w"))
+
+// Academia: suporte de halteres, kettlebell e tapete de yoga
+sprite("rack_halteres", { w: 14, h: 22, outline: "k" },
+  rect(1, 0, 2, 22, "K"), rect(11, 0, 2, 22, "K"), rect(1, 7, 12, 1, "K"), rect(1, 15, 12, 1, "K"), rect(0, 21, 14, 1, "K"),
+  (c) => [[4, "r"], [12, "b"], [20, "e"]].forEach(([y, cor]) => {
+    c.rect(3, y - 1, 8, 1, "m")
+    c.rect(3, y - 3, 2, 4, cor); c.rect(9, y - 3, 2, 4, cor)
+  }))
+
+sprite("kettlebell", { w: 8, h: 9, outline: "k" },
+  ring(3.5, 2, 2, "K"), circ(3.5, 5.5, 3, "K"), px(2, 4, "u"), px(1, 5, "u"))
+
+sprite("tapete_yoga", { w: 16, h: 32 },
+  rect(0, 0, 16, 32, "t"), box(1, 1, 14, 30, "T"), hline(1, 3, 14, "T"), hline(1, 28, 14, "T"))
+
+// Piso da copa: ladrilho xadrez claro (como as cozinhas dos jogos)
+sprite("piso_cozinha", { w: 16, h: 16 },
+  rect(0, 0, 8, 8, "w"), rect(8, 0, 8, 8, "W"), rect(0, 8, 8, 8, "W"), rect(8, 8, 8, 8, "w"),
+  hline(0, 7, 16, "v"), hline(0, 15, 16, "v"), vline(7, 0, 16, "v"), vline(15, 0, 16, "v"))
+
+// Biblioteca: tapete redondo
+sprite("tapete_redondo", { w: 32, h: 24 },
+  ellipse(15.5, 11.5, 15.5, 11.5, "P"), ellipse(15.5, 11.5, 13.5, 9.5, "p"), ellipse(15.5, 11.5, 9, 6, "W"), ellipse(15.5, 11.5, 7, 4, "p"))
+
+// Poltronas (Terapeuta: mostarda; Aprendizado: terracota): tecido capitonê
+sprite("_poltrona", { w: 16, h: 16 },
+  rect(0, 0, 16, 16, "x"),
+  (c) => [[4, 4], [12, 4], [8, 10], [0, 10]].forEach(([x, y]) => { c.px(x, y, "X"); c.px(x - 1, y - 1, "w") }))
+sprite("poltrona_terapeuta", { base: "_poltrona", swap: { x: "e", X: "E", w: "e" } })
+sprite("poltrona_aprendizado", { base: "_poltrona", swap: { x: "a", X: "A", w: "a" } })
 
 // =============================================================================================
 // BALÕES DE EMOÇÃO (status dos agentes, acima da cabeça)
@@ -454,29 +624,62 @@ sprite("_sentado", { w: 14, h: 22, mx: true }, `
   ..ccXxx
   ..ccjjj`)
 
-anim("agente_frente", { w: 14, h: 22, outline: "k", fps: 6 }, stamp("_frente", 0, 0),
+// Animações base (partes "_": não viram arquivo; cada agente as recolore com swap)
+anim("_agente_frente", { w: 14, h: 22, outline: "k", fps: 6 }, stamp("_frente", 0, 0),
   frame(),
   frame(grid(2, 20, "KKKK\n____"), grid(0, 16, "xx\nxx")),
   frame(grid(8, 20, "KKKK\n____"), grid(12, 16, "xx\nxx")))
 
-anim("agente_costas", { w: 14, h: 22, outline: "k", fps: 6 }, stamp("_costas", 0, 0),
+anim("_agente_costas", { w: 14, h: 22, outline: "k", fps: 6 }, stamp("_costas", 0, 0),
   frame(),
   frame(grid(2, 20, "KKKK\n____")),
   frame(grid(8, 20, "KKKK\n____")))
 
-anim("agente_lado", { w: 14, h: 22, outline: "k", fps: 6 }, stamp("_lado", 0, 0),
+anim("_agente_lado", { w: 14, h: 22, outline: "k", fps: 6 }, stamp("_lado", 0, 0),
   frame(),
   frame(grid(0, 19, "____jjj_JJJ___\n___jjj___JJJ__\n__KKK_____KKK_")),
   frame(grid(0, 19, "____JJJ_jjj___\n___JJJ___jjj__\n__KKK_____KKK_")))
 
-anim("agente_sentado", { w: 14, h: 22, outline: "k", fps: 5 }, stamp("_sentado", 0, 0),
+anim("_agente_sentado", { w: 14, h: 22, outline: "k", fps: 5 }, stamp("_sentado", 0, 0),
   frame(grid(2, 20, "cc\ncc"), grid(10, 19, "cc\ncc\nxx")),
   frame(grid(2, 19, "cc\ncc\nxx"), grid(10, 20, "cc\ncc")))
 
-// Variações por mesa: camisa na cor da mesa + cabelo/pele diferentes
-for (let i = 1; i <= 5; i++) {
-  const swap = { ...CORES[i - 1], ...LOOKS[i - 1] }
-  for (const pose of ["frente", "costas", "lado", "sentado"])
-    anim("_" + pose + "_" + i, { base: "agente_" + pose, swap })
-  sheet("agente_" + i, ["_frente_" + i, "_costas_" + i, "_lado_" + i, "_sentado_" + i])
+// Lendo (poltrona da biblioteca): livro aberto nas mãos; no 2º quadro vira a página
+anim("_agente_lendo", { w: 14, h: 22, outline: "k", fps: 2 }, stamp("_sentado", 0, 0), `
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ..............
+  ...bbbbbbbb...
+  ..cbbbBBbbbc..
+  ..cbbeBBebbc..
+  ...bbbBBbbb...
+  ...bbbbbbbb...`,
+  frame(),
+  frame(grid(7, 16, "ww\nwB")))
+
+// Exercitando (academia): agachamento — em pé / agachado com os pés afastados
+anim("_agente_exercitando", { w: 14, h: 22, outline: "k", fps: 3 },
+  frame(stamp("_frente", 0, 0)),
+  frame(stamp("_frente", 0, 2), grid(0, 19, "_cc________cc_"), grid(0, 21, "_KKKKK__KKKKK_"), grid(2, 15, "cc"), grid(10, 15, "cc")))
+
+// Folha de cada agente: andar (frente/costas/perfil), sentado, lendo e exercitando
+const POSES = ["frente", "costas", "lado", "sentado", "lendo", "exercitando"]
+for (const id of IDS) {
+  const swap = { ...AGENTES[id].cor, ...AGENTES[id].visual }
+  for (const pose of POSES) anim("_" + pose + "_" + id, { base: "_agente_" + pose, swap })
+  sheet("agente_" + id, POSES.map((pose) => "_" + pose + "_" + id))
 }

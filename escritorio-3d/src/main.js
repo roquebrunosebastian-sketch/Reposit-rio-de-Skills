@@ -1,12 +1,13 @@
 // Escritório de Agentes — ponto de entrada.
 // Renderiza em baixa resolução e amplia sem suavização (pixels nítidos), com a câmera inclinada
-// dos RPGs de bolso. Expõe `window.escritorio` para alocar agentes nas 5 mesas.
+// dos RPGs de bolso. Expõe `window.escritorio` para chamar os agentes e mostrar o que fazem.
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { carregarRecursos } from "./recursos.js";
 import { construirEscritorio } from "./cena.js";
-import { Agentes, STATUS } from "./agentes.js";
-import { MESAS, LARGURA } from "./layout.js";
+import { Agentes, STATUS, cimaDaCamera } from "./agentes.js";
+import { LARGURA } from "./layout.js";
+import { AGENTES } from "./agentes-config.js";
 
 const params = new URLSearchParams(location.search);
 const $ = (s) => document.querySelector(s);
@@ -145,46 +146,66 @@ function redimensionar() {
 
 // ---------------------------------------------------------------------------------------------
 // Interface
-const listaMesas = $("#lista-mesas");
-const NOMES_DEMO = ["Pesquisadora", "Codificador", "Revisora", "Designer", "Analista"];
-const STATUS_DEMO = ["trabalhando", "pensando", "trabalhando", "alerta", "concluido"];
+const listaAtivos = $("#lista-ativos"), listaFuturos = $("#lista-futuros");
+const ROTULO_ESTADO = { chegando: "chegando…", saindo: "saindo…" };
+let simulacao = null, previa = false;
+
+function linhaAgente(cfg) {
+  const presente = agentes.obter(cfg.id);
+  const li = document.createElement("li");
+  li.dataset.id = cfg.id;
+  li.className = cfg.ativo ? "" : "futuro";
+  li.style.setProperty("--cor", cfg.cor);
+  li.title = cfg.papel;
+  const linkProjeto = /^https:\/\//.test(cfg.projeto || "")
+    ? `<a class="botao" href="${escapar(cfg.projeto)}" target="_blank" rel="noopener" aria-label="Abrir o projeto de ${escapar(cfg.nome)} no Claude">Abrir</a>` : "";
+  let situacao, controles;
+  if (presente) {
+    const opcoes = Object.keys(STATUS).map((s) => `<option value="${s}" ${presente.status === s ? "selected" : ""}>${STATUS[s].rotulo}</option>`).join("");
+    situacao = ROTULO_ESTADO[presente.estado] || (cfg.ativo ? "presente" : "prévia");
+    controles = `<select aria-label="Status de ${escapar(cfg.nome)}" data-acao="status">${opcoes}</select>
+      ${linkProjeto}<button type="button" data-acao="sair" class="icone" aria-label="${escapar(cfg.nome)} sai do escritório" title="Sair do escritório">✕</button>`;
+  } else if (cfg.ativo) {
+    situacao = "fora";
+    controles = `${linkProjeto}<button type="button" data-acao="chegar">Chamar</button>`;
+  } else {
+    situacao = "em breve";
+    controles = "";
+  }
+  li.innerHTML = `<img class="cracha" src="assets/icone_${cfg.id}.png" alt="" width="26" height="26">
+    <span class="info"><b>${escapar(cfg.nome)}</b><small>${situacao}</small></span>
+    <span class="acoes">${controles}</span>`;
+  return li;
+}
 
 function desenharPainel() {
   if (!agentes) return;
-  const ocupadas = new Map(agentes.listar().map((a) => [a.mesa, a]));
-  listaMesas.replaceChildren(...MESAS.map((m) => {
-    const a = ocupadas.get(m.id);
-    const li = document.createElement("li");
-    li.dataset.mesa = m.id;
-    li.style.setProperty("--cor", m.cor);
-    const opcoes = Object.keys(STATUS).map((s) => `<option value="${s}" ${a?.status === s ? "selected" : ""}>${s === "nenhum" ? "sem balão" : STATUS[s].rotulo}</option>`).join("");
-    li.innerHTML = a
-      ? `<span class="chip">${m.id}</span>
-         <span class="info"><b>${escapar(a.nome)}</b><small>${a.estado === "sentado" ? "na mesa" : a.estado === "entrando" ? "chegando…" : "saindo…"}</small></span>
-         <select aria-label="Status do agente da mesa ${m.id}" data-acao="status">${opcoes}</select>
-         <button data-acao="liberar" aria-label="Liberar mesa ${m.id}">✕</button>`
-      : `<span class="chip">${m.id}</span>
-         <span class="info"><b>Mesa ${m.id}</b><small>livre · ${m.nomeCor}</small></span>
-         <button data-acao="alocar">Alocar</button>`;
-    return li;
-  }));
+  listaAtivos.replaceChildren(...AGENTES.filter((a) => a.ativo).map(linhaAgente));
+  listaFuturos.replaceChildren(...AGENTES.filter((a) => !a.ativo).map(linhaAgente));
+  $("#contagem-ativos").textContent = `${AGENTES.filter((a) => a.ativo && agentes.obter(a.id)).length} de ${AGENTES.filter((a) => a.ativo).length} presentes`;
+  $("#btn-previa").textContent = previa ? "Ocultar prévia" : "Ver prévia";
+  $("#btn-previa").setAttribute("aria-pressed", String(previa));
+  $("#btn-simular").textContent = simulacao ? "■ Parar simulação" : "▶ Simular atividade";
+  $("#btn-simular").setAttribute("aria-pressed", String(!!simulacao));
 }
 
 function escapar(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-listaMesas.addEventListener("click", (ev) => {
-  const botao = ev.target.closest("button");
-  if (!botao) return;
-  const id = Number(botao.closest("li").dataset.mesa);
-  if (botao.dataset.acao === "alocar") API.alocarAgente(id, { nome: NOMES_DEMO[id - 1] }).catch(aviso);
-  if (botao.dataset.acao === "liberar") API.liberarMesa(id);
-});
-listaMesas.addEventListener("change", (ev) => {
-  if (ev.target.dataset.acao !== "status") return;
-  try { API.definirStatus(Number(ev.target.closest("li").dataset.mesa), ev.target.value); } catch (e) { aviso(e); }
-});
+for (const lista of [listaAtivos, listaFuturos]) {
+  lista.addEventListener("click", (ev) => {
+    const botao = ev.target.closest("button");
+    if (!botao) return;
+    const id = botao.closest("li").dataset.id;
+    if (botao.dataset.acao === "chegar") API.chegar(id).catch(aviso);
+    if (botao.dataset.acao === "sair") API.sair(id);
+  });
+  lista.addEventListener("change", (ev) => {
+    if (ev.target.dataset.acao !== "status") return;
+    try { API.definirStatus(ev.target.closest("li").dataset.id, ev.target.value); } catch (e) { aviso(e); }
+  });
+}
 
 function aviso(e) {
   const el = $("#aviso");
@@ -194,76 +215,120 @@ function aviso(e) {
   aviso.t = setTimeout(() => { el.hidden = true; }, 3500);
 }
 
-let cicloDemo = null;
-$("#btn-demo").addEventListener("click", () => API.demonstracao());
-$("#btn-esvaziar").addEventListener("click", () => API.esvaziar());
+$("#btn-simular").addEventListener("click", () => API.simular(!simulacao));
+$("#btn-previa").addEventListener("click", () => API.previaFuturos(!previa));
 $("#sel-camera").addEventListener("change", (ev) => irParaCamera(ev.target.value));
 $("#sel-pixel").addEventListener("change", (ev) => { escalaPixel = Number(ev.target.value); redimensionar(); });
 $("#sel-pixel").value = String(escalaPixel);
 if (params.get("ui") === "0") document.body.classList.add("sem-ui");
 
-// Clique numa mesa (no 3D) destaca a linha dela no painel
+// Clique num posto ou num agente (no 3D) destaca a linha dele no painel
 const raio = new THREE.Raycaster();
 let inicioToque = null;
 canvas.addEventListener("pointerdown", (ev) => { inicioToque = [ev.clientX, ev.clientY]; });
 canvas.addEventListener("pointerup", (ev) => {
   if (!inicioToque || Math.hypot(ev.clientX - inicioToque[0], ev.clientY - inicioToque[1]) > 5) return;
   raio.setFromCamera(new THREE.Vector2((ev.clientX / innerWidth) * 2 - 1, -(ev.clientY / innerHeight) * 2 + 1), camera);
-  const hit = raio.intersectObjects(escritorio.clicaveis, true)[0];
+  const hit = raio.intersectObjects([...agentes.sprites(), ...escritorio.clicaveis], true).find((h) => h.object.visible);
   let o = hit?.object;
-  while (o && o.userData.mesaId == null) o = o.parent;
+  while (o && o.userData.postoId == null) o = o.parent;
   if (!o) return;
-  const li = listaMesas.querySelector(`li[data-mesa="${o.userData.mesaId}"]`);
+  const li = document.querySelector(`.lista-agentes li[data-id="${o.userData.postoId}"]`);
   li?.classList.remove("piscar");
   void li?.offsetWidth;
   li?.classList.add("piscar");
   li?.scrollIntoView({ block: "nearest", behavior: "smooth" });
 });
 
+// Nomes dos postos vazios (o agente presente mostra o próprio nome acima da cabeça)
+const rotulosPostos = new Map();
+function atualizarRotulosPostos() {
+  for (const cfg of AGENTES) {
+    const posto = escritorio.postos.get(cfg.id);
+    if (!posto) continue;
+    let el = rotulosPostos.get(cfg.id);
+    if (!el) {
+      el = document.createElement("div");
+      el.className = "rotulo rotulo-posto";
+      el.style.setProperty("--cor", cfg.cor);
+      el.textContent = cfg.nome;
+      $("#rotulos").appendChild(el);
+      rotulosPostos.set(cfg.id, el);
+    }
+    const topo = posto.rotulo.base.clone().addScaledVector(cimaDaCamera(camera), posto.rotulo.altura).project(camera);
+    const pe = posto.rotulo.base.clone().project(camera);
+    const alturaPx = ((topo.y - pe.y) / 2) * innerHeight;
+    el.style.display = !posto.ocupado && topo.z < 1 && alturaPx > 40 ? "" : "none";
+    el.style.transform = `translate(${((topo.x + 1) / 2) * innerWidth}px, ${((1 - topo.y) / 2) * innerHeight}px) translate(-50%, -100%)`;
+  }
+}
+
 // ---------------------------------------------------------------------------------------------
 // API pública
+const idDe = (x) => (typeof x === "number" ? AGENTES[x - 1]?.id : x);
 const API = {
-  /** Lista as 5 mesas com o agente (se houver) e as coordenadas do assento no mundo 3D. */
-  mesas() {
-    const ocupadas = new Map(agentes.listar().map((a) => [a.mesa, a]));
-    return MESAS.map((m) => {
-      const e = escritorio.mesas.get(m.id);
+  /** Os agentes, com o posto (tile e posição 3D) e o que estão fazendo agora. */
+  agentes() {
+    return AGENTES.map((cfg) => {
+      const presente = agentes.obter(cfg.id);
+      const posto = escritorio.postos.get(cfg.id);
       return {
-        id: m.id, cor: m.cor, livre: !ocupadas.has(m.id), agente: ocupadas.get(m.id) || null,
-        assento: { ...m.assento }, posicao: e.posAssento.toArray(),
+        id: cfg.id, nome: cfg.nome, papel: cfg.papel, cor: cfg.cor, ativo: cfg.ativo, projeto: cfg.projeto || null,
+        presente: !!presente, estado: presente?.estado ?? "fora", status: presente?.status ?? null,
+        posto: { tipo: posto.tipo, ...posto.local }, posicao: posto.pos.toArray(),
       };
     });
   },
-  /** alocarAgente(1, { nome: "Pesquisadora", visual: 1..5, status: "trabalhando" }) → Promise (resolve ao sentar) */
-  alocarAgente: (mesaId, opcoes) => agentes.alocar(mesaId, opcoes),
-  /** liberarMesa(1) → Promise (resolve quando o agente sai pela porta) */
-  liberarMesa: (mesaId, opcoes) => agentes.liberar(mesaId, opcoes),
-  /** definirStatus(1, "pensando") — trabalhando | pensando | alerta | concluido | ocioso | nenhum */
-  definirStatus: (mesaId, status) => agentes.definirStatus(mesaId, status),
+  /** chegar("financas", { status: "trabalhando" }) → o agente entra pela porta e vai ao posto (Promise) */
+  chegar: (id, opcoes) => agentes.alocar(idDe(id), opcoes),
+  /** sair("financas") → o agente sai pela porta (Promise) */
+  sair: (id, opcoes) => agentes.liberar(idDe(id), opcoes),
+  /** definirStatus("financas", "alerta") — trabalhando | pensando | alerta | concluido | ocioso | nenhum */
+  definirStatus: (id, status) => agentes.definirStatus(idDe(id), status),
   status: Object.keys(STATUS),
   camera: (nome) => irParaCamera(nome),
-  async demonstracao() {
-    clearInterval(cicloDemo);
-    const livres = API.mesas().filter((m) => m.livre);
-    const chegadas = livres.map((m, i) => new Promise((ok) => setTimeout(() =>
-      agentes.alocar(m.id, { nome: NOMES_DEMO[m.id - 1], status: STATUS_DEMO[m.id - 1] }).then(ok, ok), i * 700)));
-    cicloDemo = setInterval(() => {
-      const ocupados = agentes.listar().filter((a) => a.estado === "sentado");
-      if (!ocupados.length) return;
-      const a = ocupados[Math.floor(Math.random() * ocupados.length)];
-      const opcoes = ["trabalhando", "trabalhando", "pensando", "alerta", "concluido", "ocioso"].filter((s) => s !== a.status);
-      agentes.definirStatus(a.mesa, opcoes[Math.floor(Math.random() * opcoes.length)]);
-    }, 2600);
-    return Promise.all(chegadas);
+  /** Liga/desliga a troca automática de status dos agentes presentes (demonstração). */
+  simular(ligar = true) {
+    clearInterval(simulacao);
+    simulacao = null;
+    if (ligar) {
+      const trocar = () => {
+        const presentes = agentes.listar().filter((a) => a.estado === "no_posto");
+        if (!presentes.length) return;
+        const a = presentes[Math.floor(Math.random() * presentes.length)];
+        const opcoes = ["trabalhando", "trabalhando", "pensando", "alerta", "concluido", "ocioso"].filter((s) => s !== a.status);
+        agentes.definirStatus(a.posto, opcoes[Math.floor(Math.random() * opcoes.length)]);
+      };
+      simulacao = setInterval(trocar, 2200);
+      trocar();
+    }
+    desenharPainel();
   },
-  esvaziar() {
-    clearInterval(cicloDemo);
-    return Promise.all(MESAS.map((m, i) => new Promise((ok) => setTimeout(() => agentes.liberar(m.id).then(ok), i * 250))));
+  /** Mostra (ou esconde) os agentes que ainda vão ser criados, para ver o escritório completo. */
+  previaFuturos(ligar = true) {
+    previa = ligar;
+    const futuros = AGENTES.filter((a) => !a.ativo);
+    desenharPainel();
+    return Promise.all(futuros.map((a, i) => new Promise((ok) => setTimeout(() => {
+      const presente = agentes.obter(a.id);
+      if (ligar && !presente) agentes.alocar(a.id, { status: "trabalhando" }).then(ok, ok);
+      else if (!ligar && presente) agentes.liberar(a.id).then(ok, ok);
+      else ok();
+    }, i * 450))));
   },
 };
+// nomes antigos (primeira versão, com mesas numeradas) continuam funcionando
+Object.assign(API, {
+  mesas: API.agentes,
+  alocarAgente: API.chegar,
+  liberarMesa: API.sair,
+  demonstracao: () => API.simular(true),
+  esvaziar: () => Promise.all(AGENTES.map((a) => API.sair(a.id))),
+});
 
-// Integração por iframe: parent.postMessage({ escritorio: "alocarAgente", args: [2, { nome: "X" }], id: 7 }, "*")
-const PERMITIDOS = ["mesas", "alocarAgente", "liberarMesa", "definirStatus", "camera", "demonstracao", "esvaziar"];
+// Integração por iframe: parent.postMessage({ escritorio: "definirStatus", args: ["financas", "alerta"], id: 7 }, "*")
+const PERMITIDOS = ["agentes", "chegar", "sair", "definirStatus", "simular", "previaFuturos", "camera",
+  "mesas", "alocarAgente", "liberarMesa", "demonstracao", "esvaziar"];
 addEventListener("message", (ev) => {
   const d = ev.data;
   if (!d || typeof d !== "object" || !PERMITIDOS.includes(d.escritorio)) return;
@@ -279,13 +344,17 @@ try {
   escritorio = construirEscritorio(cena, R);
   agentes = new Agentes(cena, R, escritorio, { camera, camadaRotulos: $("#rotulos"), aoMudar: desenharPainel });
   window.escritorio = API;
+  // os agentes ativos já começam no escritório (use ?vazio=1 para começar sem ninguém)
+  if (params.get("vazio") !== "1")
+    for (const cfg of AGENTES.filter((a) => a.ativo)) agentes.alocar(cfg.id, { entrarPelaPorta: false });
   desenharPainel();
   redimensionar();
   irParaCamera(params.get("camera") || "rpg", true);
   $("#sel-camera").value = cameraAtual;
   $("#carregando").hidden = true;
   document.body.classList.add("pronto");
-  if (params.get("demo") === "1") API.demonstracao();
+  if (params.get("demo") === "1") API.simular(true);
+  if (params.get("previa") === "1") API.previaFuturos(true);
 } catch (e) {
   $("#carregando").textContent = "Não foi possível carregar o escritório: " + e.message;
   throw e;
@@ -318,5 +387,6 @@ renderer.setAnimationLoop(() => {
   controles.update();
   escritorio.atualizar(t, dt, camera);
   agentes.atualizar(dt, innerWidth, innerHeight);
+  atualizarRotulosPostos();
   renderer.render(cena, camera);
 });

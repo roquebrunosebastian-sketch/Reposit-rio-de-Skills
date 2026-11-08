@@ -1,38 +1,42 @@
-// Layout do escritório em tiles (1 tile = 1 unidade = 16 px de textura), como num mapa de RPG.
-// A câmera olha para o norte: linha 0 fica encostada na parede do fundo, a linha 10 é a entrada.
+// Planta do escritório em tiles (1 tile = 1 unidade = 16 px de textura), como num mapa de RPG.
+// A câmera olha para o norte: a linha 0 encosta na parede do fundo e a linha 10 é a entrada.
 
 export const LARGURA = 16;
 export const PROFUNDIDADE = 11;
 export const ALTURA_PAREDE = 3;
 
-// Legenda do mapa (tudo que não é "." ou "D" bloqueia a passagem)
-//   .  piso livre            D  capacho da entrada (onde os agentes surgem)
-//   m  mesa (2 tiles)        s  assento de uma mesa (só o agente daquela mesa entra)
-//   P  planta grande         p  planta média          C  aparador
-//   B  balcão do café        A  bebedouro             E  estante
-//   F  sofá                  O  pufe                  t  mesinha de centro
+// Legenda (só "." e "D" são passagem livre; "s" é o lugar de um agente: só ele entra)
+//   s  lugar de um agente        D  capacho da entrada (onde os agentes surgem)
+//   m  mesa (2 tiles)            I  ilha da copa (2 tiles)     B  balcão do café   A  bebedouro
+//   E  estante                   L  luminária                  #  pilha de livros / tapete de yoga
+//   H  suporte de halteres       b  bola de pilates            k  kettlebell
+//   P/p plantas                  C  aparador                   T  mesinha de chá   F  sofá
 export const MAPA = [
   // 0123456789012345
   "P......CC......P", // 0
-  "...............B", // 1
-  "..s..s..s......B", // 2
-  ".mm.mm.mm......B", // 3
+  ".............s.B", // 1   s(13,1) Nutrição, atrás da ilha
+  "..s..s..s..s.IIB", // 2   assentos das 4 mesas
+  ".mm.mm.mm.mm...B", // 3   Finanças · Investimentos · Agenda · E-mails
   "...............A", // 4
-  "................", // 5
-  "E..s...s....O..F", // 6
-  "E.mm..mm.....t.F", // 7
-  "............O..F", // 8
-  "p..............p", // 9
-  ".......DD.......", // 10
+  "E...............", // 5
+  "ELs#.......p.sT.", // 6   s(2,6) Aprendizado (poltrona) · s(13,6) Terapeuta (poltrona)
+  "...............F", // 7
+  "H.s........p...F", // 8   s(2,8) Exercícios (tapete de yoga)
+  "b.#k...........F", // 9
+  "p......DD......p", // 10
 ];
 
-// As 5 mesas. `mesa` é o tile da esquerda (a mesa ocupa col e col+1); `assento` é onde o agente senta.
-export const MESAS = [
-  { id: 1, cor: "#f2665c", corEscura: "#b83f45", nomeCor: "vermelha", mesa: { col: 1, lin: 3 }, assento: { col: 2, lin: 2 } },
-  { id: 2, cor: "#4a8fd6", corEscura: "#2f5a9e", nomeCor: "azul", mesa: { col: 4, lin: 3 }, assento: { col: 5, lin: 2 } },
-  { id: 3, cor: "#58ad4f", corEscura: "#2f7040", nomeCor: "verde", mesa: { col: 7, lin: 3 }, assento: { col: 8, lin: 2 } },
-  { id: 4, cor: "#ffd85e", corEscura: "#d9a032", nomeCor: "amarela", mesa: { col: 2, lin: 7 }, assento: { col: 3, lin: 6 } },
-  { id: 5, cor: "#b995ea", corEscura: "#7d5bbf", nomeCor: "roxa", mesa: { col: 6, lin: 7 }, assento: { col: 7, lin: 6 } },
+// Postos de trabalho. `tipo` define a mobília; `pose` a animação do agente ali.
+// `local` é o tile onde o agente fica; `ajuste` desloca a posição final dentro do tile.
+export const POSTOS = [
+  { id: "financas", tipo: "mesa", pose: "sentado", mesa: { col: 1, lin: 3 }, local: { col: 2, lin: 2 } },
+  { id: "investimentos", tipo: "mesa", pose: "sentado", mesa: { col: 4, lin: 3 }, local: { col: 5, lin: 2 } },
+  { id: "agenda", tipo: "mesa", pose: "sentado", mesa: { col: 7, lin: 3 }, local: { col: 8, lin: 2 } },
+  { id: "emails", tipo: "mesa", pose: "sentado", mesa: { col: 10, lin: 3 }, local: { col: 11, lin: 2 } },
+  { id: "nutricao", tipo: "bancada", pose: "em_pe", local: { col: 13, lin: 1 }, ajuste: { x: 0.5, z: 0.05 } },
+  { id: "terapeuta", tipo: "poltrona", pose: "sentado", local: { col: 13, lin: 6 } },
+  { id: "aprendizado", tipo: "poltrona", pose: "lendo", local: { col: 2, lin: 6 } },
+  { id: "exercicios", tipo: "academia", pose: "exercitando", local: { col: 2, lin: 8 }, ajuste: { x: 0, z: 0.5 } },
 ];
 
 export const PORTA = [{ col: 7, lin: 10 }, { col: 8, lin: 10 }];
