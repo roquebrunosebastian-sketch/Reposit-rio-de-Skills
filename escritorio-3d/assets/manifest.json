@@ -1,0 +1,564 @@
+{
+ "piso_madeira": {
+  "arquivo": "piso_madeira.png",
+  "w": 16,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "parede": {
+  "arquivo": "parede.png",
+  "w": 16,
+  "h": 48,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "janela": {
+  "arquivo": "janela.png",
+  "w": 32,
+  "h": 26,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "quadro_branco": {
+  "arquivo": "quadro_branco.png",
+  "w": 40,
+  "h": 24,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "relogio": {
+  "arquivo": "relogio.png",
+  "w": 12,
+  "h": 12,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "arte_1": {
+  "arquivo": "arte_1.png",
+  "w": 16,
+  "h": 20,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "arte_2": {
+  "arquivo": "arte_2.png",
+  "w": 16,
+  "h": 20,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "letreiro": {
+  "arquivo": "letreiro.png",
+  "w": 46,
+  "h": 11,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "estante": {
+  "arquivo": "estante.png",
+  "w": 32,
+  "h": 36,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "mesa_tampo": {
+  "arquivo": "mesa_tampo.png",
+  "w": 32,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "mesa_painel_1": {
+  "arquivo": "mesa_painel_1.png",
+  "w": 30,
+  "h": 10,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "mesa_painel_2": {
+  "arquivo": "mesa_painel_2.png",
+  "w": 30,
+  "h": 10,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "mesa_painel_3": {
+  "arquivo": "mesa_painel_3.png",
+  "w": 30,
+  "h": 10,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "mesa_painel_4": {
+  "arquivo": "mesa_painel_4.png",
+  "w": 30,
+  "h": 10,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "mesa_painel_5": {
+  "arquivo": "mesa_painel_5.png",
+  "w": 30,
+  "h": 10,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "cadeira_1": {
+  "arquivo": "cadeira_1.png",
+  "w": 16,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "cadeira_2": {
+  "arquivo": "cadeira_2.png",
+  "w": 16,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "cadeira_3": {
+  "arquivo": "cadeira_3.png",
+  "w": 16,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "cadeira_4": {
+  "arquivo": "cadeira_4.png",
+  "w": 16,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "cadeira_5": {
+  "arquivo": "cadeira_5.png",
+  "w": 16,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "monitor_costas": {
+  "arquivo": "monitor_costas.png",
+  "w": 16,
+  "h": 10,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "tela_codigo": {
+  "arquivo": "tela_codigo.png",
+  "w": 14,
+  "h": 32,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "tela_descanso": {
+  "arquivo": "tela_descanso.png",
+  "w": 14,
+  "h": 8,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "teclado": {
+  "arquivo": "teclado.png",
+  "w": 14,
+  "h": 5,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "planta_grande": {
+  "arquivo": "planta_grande.png",
+  "w": 16,
+  "h": 30,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "planta_media": {
+  "arquivo": "planta_media.png",
+  "w": 14,
+  "h": 24,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "planta_mesa": {
+  "arquivo": "planta_mesa.png",
+  "w": 9,
+  "h": 10,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "bebedouro": {
+  "arquivo": "bebedouro.png",
+  "w": 12,
+  "h": 28,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "maquina_cafe": {
+  "arquivo": "maquina_cafe.png",
+  "w": 16,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "balcao": {
+  "arquivo": "balcao.png",
+  "w": 16,
+  "h": 14,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "sofa_tecido": {
+  "arquivo": "sofa_tecido.png",
+  "w": 16,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "tapete_lounge": {
+  "arquivo": "tapete_lounge.png",
+  "w": 48,
+  "h": 32,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "tapete_entrada": {
+  "arquivo": "tapete_entrada.png",
+  "w": 32,
+  "h": 16,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "seta_livre": {
+  "arquivo": "seta_livre.png",
+  "w": 11,
+  "h": 10,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "sombra": {
+  "arquivo": "sombra.png",
+  "w": 14,
+  "h": 6,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "balao_digitando": {
+  "arquivo": "balao_digitando.png",
+  "w": 14,
+  "h": 13,
+  "quadros": 3,
+  "fps": 3,
+  "tipo": "anim"
+ },
+ "balao_alerta": {
+  "arquivo": "balao_alerta.png",
+  "w": 14,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "balao_pensando": {
+  "arquivo": "balao_pensando.png",
+  "w": 14,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "balao_ok": {
+  "arquivo": "balao_ok.png",
+  "w": 14,
+  "h": 13,
+  "quadros": 1,
+  "fps": 8,
+  "tipo": "sprite"
+ },
+ "balao_ocioso": {
+  "arquivo": "balao_ocioso.png",
+  "w": 14,
+  "h": 13,
+  "quadros": 2,
+  "fps": 2,
+  "tipo": "anim"
+ },
+ "agente_frente": {
+  "arquivo": "agente_frente.png",
+  "w": 16,
+  "h": 24,
+  "quadros": 3,
+  "fps": 6,
+  "tipo": "anim"
+ },
+ "agente_costas": {
+  "arquivo": "agente_costas.png",
+  "w": 16,
+  "h": 24,
+  "quadros": 3,
+  "fps": 6,
+  "tipo": "anim"
+ },
+ "agente_lado": {
+  "arquivo": "agente_lado.png",
+  "w": 16,
+  "h": 24,
+  "quadros": 3,
+  "fps": 6,
+  "tipo": "anim"
+ },
+ "agente_sentado": {
+  "arquivo": "agente_sentado.png",
+  "w": 16,
+  "h": 24,
+  "quadros": 2,
+  "fps": 5,
+  "tipo": "anim"
+ },
+ "agente_1": {
+  "arquivo": "agente_1.png",
+  "w": 176,
+  "h": 24,
+  "quadros": 1,
+  "fps": 0,
+  "tipo": "sheet",
+  "rects": {
+   "_frente_1": {
+    "x": 0,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_costas_1": {
+    "x": 48,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_lado_1": {
+    "x": 96,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_sentado_1": {
+    "x": 144,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 5
+   }
+  }
+ },
+ "agente_2": {
+  "arquivo": "agente_2.png",
+  "w": 176,
+  "h": 24,
+  "quadros": 1,
+  "fps": 0,
+  "tipo": "sheet",
+  "rects": {
+   "_frente_2": {
+    "x": 0,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_costas_2": {
+    "x": 48,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_lado_2": {
+    "x": 96,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_sentado_2": {
+    "x": 144,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 5
+   }
+  }
+ },
+ "agente_3": {
+  "arquivo": "agente_3.png",
+  "w": 176,
+  "h": 24,
+  "quadros": 1,
+  "fps": 0,
+  "tipo": "sheet",
+  "rects": {
+   "_frente_3": {
+    "x": 0,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_costas_3": {
+    "x": 48,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_lado_3": {
+    "x": 96,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_sentado_3": {
+    "x": 144,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 5
+   }
+  }
+ },
+ "agente_4": {
+  "arquivo": "agente_4.png",
+  "w": 176,
+  "h": 24,
+  "quadros": 1,
+  "fps": 0,
+  "tipo": "sheet",
+  "rects": {
+   "_frente_4": {
+    "x": 0,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_costas_4": {
+    "x": 48,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_lado_4": {
+    "x": 96,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_sentado_4": {
+    "x": 144,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 5
+   }
+  }
+ },
+ "agente_5": {
+  "arquivo": "agente_5.png",
+  "w": 176,
+  "h": 24,
+  "quadros": 1,
+  "fps": 0,
+  "tipo": "sheet",
+  "rects": {
+   "_frente_5": {
+    "x": 0,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_costas_5": {
+    "x": 48,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_lado_5": {
+    "x": 96,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 3,
+    "fps": 6
+   },
+   "_sentado_5": {
+    "x": 144,
+    "y": 0,
+    "w": 16,
+    "h": 24,
+    "quadros": 2,
+    "fps": 5
+   }
+  }
+ }
+}

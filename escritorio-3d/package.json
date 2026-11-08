@@ -1,0 +1,11 @@
+{
+  "name": "escritorio-3d",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Escritório moderno em 3D, com visual de RPG em pixel art e 5 mesas prontas para agentes animados.",
+  "type": "module",
+  "scripts": {
+    "arte": "node ferramentas/pxl-lite.mjs build arte/escritorio.px.js --out assets",
+    "servir": "python3 -m http.server 8080"
+  }
+}

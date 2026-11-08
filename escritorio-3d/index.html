@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Escritório de Agentes</title>
+  <meta name="description" content="Escritório moderno em 3D com visual de RPG em pixel art e 5 mesas prontas para receber agentes animados.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --tinta: #262236;
+      --papel: #fcfbf6;
+      --papel-2: #ebe8df;
+      --filete: #7fd4c4;
+      --suave: #6f6a78;
+      --vazio: #1d1a2b;
+      --sombra: rgba(16, 12, 30, 0.45);
+      --fonte: "Pixelify Sans", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --tinta: #f4f1ea;
+        --papel: #2b2840;
+        --papel-2: #36334d;
+        --filete: #46a89d;
+        --suave: #b8b2c6;
+        color-scheme: dark;
+      }
+    }
+    :root[data-theme="dark"] {
+      --tinta: #f4f1ea;
+      --papel: #2b2840;
+      --papel-2: #36334d;
+      --filete: #46a89d;
+      --suave: #b8b2c6;
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; }
+    body { background: var(--vazio); color: var(--tinta); font: 16px/1.25 var(--fonte); -webkit-font-smoothing: none; }
+
+    #tela {
+      position: fixed; inset: 0; width: 100%; height: 100%; display: block;
+      image-rendering: pixelated; image-rendering: crisp-edges; touch-action: none; cursor: grab;
+    }
+    #tela:active { cursor: grabbing; }
+
+    /* Caixa de diálogo de RPG de bolso: borda escura + filete colorido por dentro */
+    .caixa {
+      background: var(--papel);
+      border: 3px solid #262236;
+      border-radius: 10px;
+      box-shadow: inset 0 0 0 2px var(--papel), inset 0 0 0 4px var(--filete), 0 4px 0 var(--sombra);
+      padding: 12px 14px;
+    }
+
+    .titulo { position: fixed; top: 16px; left: 16px; max-width: 340px; }
+    .titulo h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: 0.5px; }
+    .titulo p { margin: 4px 0 0; color: var(--suave); font-size: 15px; }
+
+    .painel { position: fixed; top: 16px; right: 16px; width: 316px; max-height: calc(100% - 120px); overflow: auto; }
+    .painel h2 { margin: 0 0 8px; font-size: 17px; font-weight: 600; display: flex; justify-content: space-between; align-items: baseline; }
+    .painel h2 small { font-size: 13px; font-weight: 400; color: var(--suave); }
+    #lista-mesas { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+    #lista-mesas li {
+      display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 8px;
+      padding: 6px 8px; border-radius: 6px; background: var(--papel-2); border-left: 5px solid var(--cor);
+    }
+    #lista-mesas li.piscar { animation: piscar 0.9s steps(3) 2; }
+    @keyframes piscar { 50% { outline: 3px solid var(--cor); } }
+    .chip {
+      width: 24px; height: 24px; border-radius: 5px; display: grid; place-items: center;
+      background: var(--cor); color: #262236; font-weight: 600; border: 2px solid #262236;
+    }
+    .info { display: grid; min-width: 0; }
+    .info b { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .info small { color: var(--suave); font-size: 13px; }
+
+    button, select {
+      font: inherit; font-size: 14px; color: #262236; background: #fcfbf6;
+      border: 2px solid #262236; border-radius: 6px; padding: 4px 9px; cursor: pointer;
+      box-shadow: 0 2px 0 #262236; min-height: 30px;
+    }
+    button:hover, select:hover { background: #fff3c4; }
+    button:active { transform: translateY(2px); box-shadow: none; }
+    button:focus-visible, select:focus-visible { outline: 3px solid var(--filete); outline-offset: 2px; }
+    select { padding-right: 4px; max-width: 128px; }
+    #lista-mesas select { max-width: 112px; font-size: 13px; }
+
+    .barra { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; padding: 10px 12px; }
+    .barra label { display: flex; gap: 6px; align-items: center; font-size: 14px; }
+    .barra .sep { width: 2px; align-self: stretch; background: var(--papel-2); }
+    #btn-demo { background: #ffd85e; }
+    #btn-demo:hover { background: #ffe58f; }
+
+    #rotulos { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+    .rotulo {
+      position: absolute; left: 0; top: 0; white-space: nowrap;
+      font-size: 12px; line-height: 1; padding: 3px 6px 4px; border-radius: 4px;
+      color: #262236; background: #fcfbf6; border: 2px solid #262236; border-bottom: 3px solid var(--cor);
+    }
+
+    #carregando { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    #aviso { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); max-width: min(92vw, 460px); font-size: 15px; }
+
+    body:not(.pronto) .titulo, body:not(.pronto) .painel, body:not(.pronto) .barra { visibility: hidden; }
+    body.sem-ui .titulo, body.sem-ui .painel, body.sem-ui .barra { display: none; }
+
+    @media (max-width: 760px) {
+      .titulo { top: 10px; left: 10px; right: 10px; max-width: none; padding: 8px 12px; }
+      .titulo h1 { font-size: 18px; }
+      .titulo p { display: none; }
+      .painel { top: auto; bottom: 110px; left: 16px; right: 16px; width: auto; max-height: 32%; padding: 8px 10px; }
+      .painel h2 { display: none; }
+      #lista-mesas { gap: 4px; }
+      #lista-mesas li { padding: 4px 6px; gap: 6px; }
+      .info small { display: none; }
+      .rotulo { font-size: 11px; }
+      .barra { left: 16px; right: 16px; bottom: 10px; transform: none; padding: 8px; gap: 6px; }
+      .barra .sep { display: none; }
+      #aviso { bottom: auto; top: 64px; }
+    }
+    @media (prefers-reduced-motion: reduce) { #lista-mesas li.piscar { animation: none; outline: 3px solid var(--cor); } }
+  </style>
+</head>
+<body>
+  <canvas id="tela" aria-label="Escritório 3D em pixel art com cinco mesas"></canvas>
+  <div id="rotulos" aria-hidden="true"></div>
+
+  <header class="caixa titulo">
+    <h1>Escritório de Agentes</h1>
+    <p>Arraste para girar · role para aproximar · clique numa mesa</p>
+  </header>
+
+  <aside class="caixa painel" aria-label="Mesas">
+    <h2>Mesas <small>5 posições</small></h2>
+    <ul id="lista-mesas"></ul>
+  </aside>
+
+  <nav class="caixa barra" aria-label="Controles">
+    <button id="btn-demo" type="button">▶ Demonstração</button>
+    <button id="btn-esvaziar" type="button">Esvaziar</button>
+    <span class="sep" aria-hidden="true"></span>
+    <label>Câmera
+      <select id="sel-camera">
+        <option value="rpg">RPG</option>
+        <option value="isometrica">Isométrica</option>
+        <option value="topo">De cima</option>
+      </select>
+    </label>
+    <label>Pixel
+      <select id="sel-pixel">
+        <option value="1">1×</option>
+        <option value="2">2×</option>
+        <option value="3">3×</option>
+        <option value="4">4×</option>
+      </select>
+    </label>
+  </nav>
+
+  <div id="carregando" class="caixa" role="status">Carregando o escritório…</div>
+  <div id="aviso" class="caixa" role="alert" hidden></div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
